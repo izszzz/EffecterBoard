@@ -2,6 +2,4 @@
 
 ## globalThis
 
-- audioStream
-- audioCtx
 - audioClass

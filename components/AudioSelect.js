@@ -1,12 +1,11 @@
 export default class AudioSelect extends HTMLElement {
   static get observedAttributes() {
-    return ["ctx", "stream"]
+    return ["mounted"]
   }
   constructor() {
     super()
-    this._ctx = {}
-    this._stream = {}
-    this._audio = {} //Audio class
+    this._ctx = null
+    this._stream = null
     this.e = { select: document.createElement("select") }
     this.e.select.addEventListener("change", this.selectAudio)
     const shadow = this.attachShadow({ mode: "open" })
@@ -14,44 +13,27 @@ export default class AudioSelect extends HTMLElement {
   }
 
   attributeChangedCallback() {
-    if (this.hasAttribute("ctx", "stream")) {
+    if (this.hasAttribute("mounted")) {
       this.loadAudio()
     }
   }
 
-  get ctx() {
-    return this._ctx
-  }
-
-  set ctx(value) {
-    this._ctx = value
-    this.setAttribute("ctx", "")
-  }
-
-  get stream() {
-    return this._stream
-  }
-
-  set stream(value) {
-    this._stream = value
-    this.setAttribute("stream", "")
-  }
-
-  async getConnectedDevices() {
-    const devices = await navigator.mediaDevices.enumerateDevices(),
-      selectedDevices = [...devices].filter(
-        device => device.kind === "audio" + this.getAttribute("kind")
-      )
-    return selectedDevices
-  }
+  getConnectedDevices = async () =>
+    [...(await navigator.mediaDevices.enumerateDevices())].filter(device => {
+      const kind = this.getAttribute("kind")
+      if (kind === "input") {
+        return device.kind === "audioinput"
+      } else if (kind === "output") {
+        return device.kind === "audiooutput" && device.deviceId === "default"
+      }
+    })
 
   createOptionTag(devices) {
+    this.e.select.textContent = ""
     ;[...devices].forEach(device => {
-      const currentDeviseLabel = this.stream.getAudioTracks()[0].label,
-        option = document.createElement("option")
-      if (currentDeviseLabel === device.label) {
+      const option = document.createElement("option")
+      globalThis.audioClass.stream.getAudioTracks()[0].label === device.label &&
         option.setAttribute("selected", "")
-      }
       option.setAttribute("value", device.deviceId)
       option.innerText = device.label
       this.e.select.appendChild(option)
@@ -63,12 +45,16 @@ export default class AudioSelect extends HTMLElement {
   }
 
   async selectAudio(e) {
-    globalThis.audioClass.ctx.close()
-    globalThis.audioClass.stream = await navigator.mediaDevices.getUserMedia({
-      audio: { deviceId: e.currentTarget.value },
-    })
-    globalThis.audioClass.ctx = new AudioContext()
-    globalThis.audioClass.play()
+    let audio = globalThis.audioClass
+    audio.stream.getAudioTracks().forEach(track => track.stop())
+    try {
+      audio.stream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: e.currentTarget.value },
+      })
+    } catch (e) {
+      console.log(e)
+    }
+    audio.play()
   }
 }
 customElements.define("audio-select", AudioSelect)
