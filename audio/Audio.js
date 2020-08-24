@@ -72,11 +72,17 @@ export default class Audio {
     this.source = this.ctx.createMediaStreamSource(this.stream)
     this.destination = this.ctx.destination
   }
+  connectInput() {
+    this.source.connect(this.masterGain)
+  }
+  disconnectInput() {
+    this.source.disconnect(this.masterGain)
+  }
 
   masterVolume() {
     this.masterGain = this.ctx.createGain()
     this.e.horizontalTrack.gain = this.masterGain.gain
-    ;[this.source, this.masterGain].reduce((a, b) => a.connect(b))
+    this.connectInput()
   }
 
   effectorBoard() {
@@ -86,7 +92,6 @@ export default class Audio {
   }
 
   output() {
-    console.log(this.effectorBoardOutput)
     this.effectorBoardOutput
       ? this.effectorBoardOutput.connect(this.destination)
       : this.masterGain.connect(this.destination)

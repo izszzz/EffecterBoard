@@ -47,14 +47,16 @@ export default class AudioSelect extends HTMLElement {
   async selectAudio(e) {
     let audio = globalThis.audioClass
     audio.stream.getAudioTracks().forEach(track => track.stop())
+    audio.disconnectInput()
     try {
       audio.stream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: e.currentTarget.value },
       })
+      audio.source = audio.ctx.createMediaStreamSource(audio.stream)
     } catch (e) {
       console.log(e)
     }
-    audio.load()
+    audio.connectInput()
   }
 }
 customElements.define("audio-select", AudioSelect)

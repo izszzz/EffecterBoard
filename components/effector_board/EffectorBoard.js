@@ -46,7 +46,6 @@ export default class EffectorBoard extends HTMLElement {
     this.input = globalThis.audioClass.masterGain
     const mb = document.createElement("move-box"),
       ef = document.createElement(effector)
-    ef.innerText = effector
     ef.setAttribute("slot", "effector")
     ef.setAttribute("mounted", "")
     mb.appendChild(ef)
