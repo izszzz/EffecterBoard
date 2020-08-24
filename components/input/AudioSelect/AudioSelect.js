@@ -4,8 +4,6 @@ export default class AudioSelect extends HTMLElement {
   }
   constructor() {
     super()
-    this._ctx = null
-    this._stream = null
     this.e = { select: document.createElement("select") }
     this.e.select.addEventListener("change", this.selectAudio)
     const shadow = this.attachShadow({ mode: "open" })

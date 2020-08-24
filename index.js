@@ -1,6 +1,10 @@
 import Audio from "./audio/Audio.js"
-import EffectorBoard from "./audio/EffectorBoard/EffectorBoard.js"
-import "./components/AudioSelect.js"
+import "./components/input/AudioSelect/AudioSelect.js"
+import "./components/input/VolumeRange/VolumeRange.js"
+import "./components/track/HorizontalTrack/HorizontalTrack.js"
+import "./components/effector_board/EffectorBoard.js"
+import "./components/effector_board/EmptyBox.js"
+import "./components/modal/BasicModal.js"
 ;(async () => {
   let stream, ctx
   try {

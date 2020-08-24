@@ -3,11 +3,12 @@ export default class Audio {
     this._ctx = ctx
     this._stream = stream
     this._source = null
-    this._gainNode = null
+    this._masterGain = null
     this._destination = null
     this.e = {
       audioInputSelect: document.querySelector("audio-select[kind=input]"),
       audioOutputSelect: document.querySelector("audio-select[kind=output]"),
+      horizontalTrack: document.querySelector("horizontal-track"),
     }
   }
 
@@ -32,11 +33,11 @@ export default class Audio {
     this._source = this.setterCheck(val, MediaStreamAudioSourceNode)
   }
 
-  get gainNode() {
-    return this._gainNode
+  get masterGain() {
+    return this._masterGain
   }
-  set gainNode(val) {
-    this._gainNode = this.setterCheck(val, GainNode)
+  set masterGain(val) {
+    this._masterGain = this.setterCheck(val, GainNode)
   }
 
   get destination() {
@@ -62,14 +63,14 @@ export default class Audio {
   }
 
   masterVolume() {
-    this.gainNode = this.ctx.createGain()
-    this.gainNode.gain.value = 0.1
+    this.masterGain = this.ctx.createGain()
+    this.e.horizontalTrack.gain = this.masterGain.gain
+    ;[this.source, this.masterGain].reduce((a, b) => a.connect(b))
   }
+  effectorBoard() {}
 
   output() {
-    ;[this.source, this.gainNode, this.destination].reduce((a, b) =>
-      a.connect(b)
-    )
+    ;[this.masterGain, this.destination].reduce((a, b) => a.connect(b))
   }
 
   play() {
