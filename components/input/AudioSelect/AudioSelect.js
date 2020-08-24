@@ -10,8 +10,8 @@ export default class AudioSelect extends HTMLElement {
     shadow.appendChild(this.e.select)
   }
 
-  attributeChangedCallback() {
-    if (this.hasAttribute("mounted")) {
+  attributeChangedCallback(name) {
+    if (name === "mounted") {
       this.loadAudio()
     }
   }
@@ -23,6 +23,8 @@ export default class AudioSelect extends HTMLElement {
         return device.kind === "audioinput"
       } else if (kind === "output") {
         return device.kind === "audiooutput" && device.deviceId === "default"
+      } else {
+        throw new Error('audio-select tag not have attribute "kind"')
       }
     })
 
@@ -52,7 +54,7 @@ export default class AudioSelect extends HTMLElement {
     } catch (e) {
       console.log(e)
     }
-    audio.play()
+    audio.load()
   }
 }
 customElements.define("audio-select", AudioSelect)

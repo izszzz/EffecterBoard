@@ -39,7 +39,7 @@ export default class BasicModal extends HTMLElement {
     .window{
         display: inline-block;
         background: white;
-        border-radius: 10px;
+        border-radius: 5px;
     }
     header{
         border-bottom: solid 1px black;

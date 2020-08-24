@@ -2,8 +2,10 @@ import Audio from "./audio/Audio.js"
 import "./components/input/AudioSelect/AudioSelect.js"
 import "./components/input/VolumeRange/VolumeRange.js"
 import "./components/track/HorizontalTrack/HorizontalTrack.js"
+import "./components/effector/DistortionEffector.js"
 import "./components/effector_board/EffectorBoard.js"
 import "./components/effector_board/EmptyBox.js"
+import "./components/effector_board/MoveBox.js"
 import "./components/modal/BasicModal.js"
 ;(async () => {
   let stream, ctx
@@ -16,5 +18,5 @@ import "./components/modal/BasicModal.js"
     console.log(e)
   }
   globalThis.audioClass = new Audio(ctx, stream)
-  globalThis.audioClass.play()
+  globalThis.audioClass.load()
 })()

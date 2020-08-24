@@ -23,12 +23,14 @@ export default class EmptyBox extends HTMLElement {
     shadow.appendChild(style)
     this.EmptyBoxModal()
   }
+
   openModal = () => {
     const modal = this.e.modal
     modal.setAttribute("active", "")
     modal.appendChild(this.e.modal_title)
     modal.appendChild(this.e.modal_content)
   }
+
   EmptyBoxModal = () => {
     const eb = this.e.effector_board,
       title = this.e.modal_title,
@@ -39,15 +41,7 @@ export default class EmptyBox extends HTMLElement {
     this.effectors.forEach(effector => {
       const li = document.createElement("li")
       li.innerText = effector
-      li.addEventListener("click", () => {
-        let effectors = eb.getAttribute("effectors")
-        if (effectors) {
-          effectors = [...effectors.split(","), effector]
-        } else {
-          effectors = effector
-        }
-        eb.setAttribute("effectors", effectors)
-      })
+      li.addEventListener("click", () => eb.createEffector(effector))
       content.appendChild(li)
     })
   }
@@ -56,6 +50,7 @@ export default class EmptyBox extends HTMLElement {
   .box{
       height: 400px;
       width: 250px;
+      margin: 0 5px;
       border: solid 1px black;
       cursor: pointer;
       user-select: none;

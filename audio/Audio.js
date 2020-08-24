@@ -4,11 +4,13 @@ export default class Audio {
     this._stream = stream
     this._source = null
     this._masterGain = null
+    this._effectorBoardOutput = null
     this._destination = null
     this.e = {
       audioInputSelect: document.querySelector("audio-select[kind=input]"),
       audioOutputSelect: document.querySelector("audio-select[kind=output]"),
       horizontalTrack: document.querySelector("horizontal-track"),
+      effectorBoard: document.querySelector("effector-board"),
     }
   }
 
@@ -47,6 +49,13 @@ export default class Audio {
     this._destination = this.setterCheck(val, AudioDestinationNode)
   }
 
+  get effectorBoardOutput() {
+    return this._effectorBoardOutput
+  }
+  set effectorBoardOutput(val) {
+    this._effectorBoardOutput = val
+  }
+
   setterCheck(val, ins) {
     if (val instanceof ins) {
       return val
@@ -56,6 +65,8 @@ export default class Audio {
   }
 
   input() {
+    this.e.audioInputSelect.removeAttribute("mounted", "")
+    this.e.audioOutputSelect.removeAttribute("mounted", "")
     this.e.audioInputSelect.setAttribute("mounted", "")
     this.e.audioOutputSelect.setAttribute("mounted", "")
     this.source = this.ctx.createMediaStreamSource(this.stream)
@@ -67,15 +78,24 @@ export default class Audio {
     this.e.horizontalTrack.gain = this.masterGain.gain
     ;[this.source, this.masterGain].reduce((a, b) => a.connect(b))
   }
-  effectorBoard() {}
 
-  output() {
-    ;[this.masterGain, this.destination].reduce((a, b) => a.connect(b))
+  effectorBoard() {
+    const ef = this.e.effectorBoard
+    ef.removeAttribute("mounted", "")
+    ef.setAttribute("mounted", "")
   }
 
-  play() {
+  output() {
+    console.log(this.effectorBoardOutput)
+    this.effectorBoardOutput
+      ? this.effectorBoardOutput.connect(this.destination)
+      : this.masterGain.connect(this.destination)
+  }
+
+  load() {
     this.input()
     this.masterVolume()
+    this.effectorBoard()
     this.output()
   }
 }
