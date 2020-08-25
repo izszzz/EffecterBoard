@@ -31,19 +31,21 @@ export default class MoveBox extends HTMLElement {
   }
 
   removeThis = () => {
+    this.effector.disconnectNodes()
     this.e.effectorBoard.removeEffector(this.effector)
     this.remove()
   }
 
   style = () => `
   .container{
-      position: relative;
-      height: 400px;
-      width: 250px;
-      margin: 0 5px;
-      border: solid 1px black;
-      cursor: pointer;
-      user-select: none;
+    position: relative;
+    height: 400px;
+    width: 250px;
+    margin: 0 5px;
+    border: solid 1px black;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 5px;
   }
   .close-btn{
     display: inline-block;
@@ -53,6 +55,12 @@ export default class MoveBox extends HTMLElement {
     width: 20px;
     background: rgba(0,0,0,0.2);
     text-align: center;
+    line-height: 20px;
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .close-btn:hover{
+    opacity: 1;
   }
   `
 }

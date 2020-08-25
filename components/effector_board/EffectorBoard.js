@@ -82,6 +82,7 @@ export default class EffectorBoard extends HTMLElement {
   style = () => `
   .container{
     display: flex;
+    align-items: center;
     margin: 10px;
     padding: 10px;
     border: solid 1px black;

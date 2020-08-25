@@ -41,6 +41,7 @@ export default class VolumeRange extends HTMLElement {
     this.e.input.value = value
     this.e.range.value = value
   }
+
   style = () => `
   input[type=number]{
     width: 5px;
