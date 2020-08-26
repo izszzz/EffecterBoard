@@ -1,50 +1,79 @@
 export default class VolumeRange extends HTMLElement {
+  static get observedAttributes() {
+    return ["value"]
+  }
   constructor() {
     super()
-    this._gain = null
+    this._value = null
+    this.onchange = null
     this.e = {
       container: document.createElement("div"),
       range: document.createElement("input"),
       input: document.createElement("input"),
-      style: document.createElement("style"),
     }
     const shadow = this.attachShadow({ mode: "open" }),
       style = document.createElement("style")
-    style.textContent = this.style()
+    style.textContent = this._style()
     this.e.container.classList.add("container")
     this.e.range.setAttribute("type", "range")
-    this.e.range.setAttribute("min", 0)
-    this.e.range.setAttribute("max", 150)
-    this.e.range.setAttribute("value", 100)
-    this.e.range.addEventListener("input", this.changeGain)
+    this.e.range.addEventListener("input", this._changeRangeValue)
     this.e.input.setAttribute("type", "number")
-    this.e.input.setAttribute("min", 0)
-    this.e.input.setAttribute("max", 150)
-    this.e.input.setAttribute("value", 100)
-    this.e.input.addEventListener("input", this.changeGain)
+    this.e.input.addEventListener("input", this._changeInputValue)
     this.e.container.appendChild(this.e.input)
     this.e.container.appendChild(this.e.range)
     shadow.appendChild(this.e.container)
-    shadow.appendChild(this.e.style)
+    shadow.appendChild(style)
   }
 
-  get gain() {
-    return this._gain
+  attributeChangedCallback(name) {
+    if (name === "value") this.onchange && this.onchange(this.value)
   }
-  set gain(val) {
-    this._gain = val
+  connectedCallback() {
+    this.e.input.setAttribute("max", this.getAttribute("max") || 150)
+    this.e.range.setAttribute("max", this.getAttribute("max") || 150)
+    this.e.input.setAttribute("min", this.getAttribute("min") || 0)
+    this.e.range.setAttribute("min", this.getAttribute("min") || 0)
+    this.e.input.setAttribute("value", this.getAttribute("value") || 100)
+    this.e.range.setAttribute("value", this.getAttribute("value") || 100)
+    this.value = this.getAttribute("value") || 100
   }
 
-  changeGain = e => {
+  get value() {
+    return this._value
+  }
+  set value(val) {
+    this._value = val
+  }
+
+  _changeInputValue = e => {
     const value = e.currentTarget.value
-    this.gain.value = value / 100
-    this.e.input.value = value
     this.e.range.value = value
+    this.value = value
+    this.setAttribute("value", value)
+  }
+  _changeRangeValue = e => {
+    const value = e.currentTarget.value
+    this.e.input.value = value
+    this.value = value
+    this.setAttribute("value", value)
   }
 
-  style = () => `
+  _style = () => `
+  .container{
+
+  }
   input[type=number]{
-    width: 5px;
+    vertical-align: middle;
+    width: 50px;
+  }
+  input[type=range]{
+    vertical-align: middle;
+    appearance: none;
+    height: 2px;
+    background: #dedede;
+  }
+  input[type=range]:active,input[type=range]:focus{
+    outline: none;
   }
   `
 }

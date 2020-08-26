@@ -8,6 +8,8 @@ export default class DistortionEffector extends HTMLElement {
     this._gain = null
     this._wave = null
     this.e = {
+      lamp: document.createElement("basic-lamp"),
+      power: document.createElement("basic-label"),
       gainInput: document.createElement("input"),
       gainRange: document.createElement("input"),
       waveInput: document.createElement("input"),
@@ -42,7 +44,9 @@ export default class DistortionEffector extends HTMLElement {
     this.e.gainInput.setAttribute("value", 100)
     this.e.gainInput.setAttribute("type", "number")
 
+    this.e.lamp.setAttribute("active", "")
     container.classList.add("container")
+    container.appendChild(this.e.lamp)
     container.appendChild(this.e.waveInput)
     container.appendChild(this.e.waveRange)
     container.appendChild(this.e.gainInput)
@@ -70,6 +74,13 @@ export default class DistortionEffector extends HTMLElement {
   }
   set output(val) {
     this._output = val
+  }
+
+  on = () => this.connectNodes()
+
+  off = () => {
+    this.disconnectNodes()
+    this.output = this.gain
   }
 
   attributeChangedCallback(name) {
@@ -125,14 +136,18 @@ export default class DistortionEffector extends HTMLElement {
 
   style = () => `
   .container{
-      height: 400px;
-      width: 250px;
-      background: #2b2b2b;
-      cursor: pointer;
-      user-select: none;
+    height: 400px;
+    width: 250px;
+    padding: 5px;
+    background: #2b2b2b;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
   }
   input[type=range]{
     appearance: none;
+    backgroudn: white;
+    height: 2px;
   }
   `
 }

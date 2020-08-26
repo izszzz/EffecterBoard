@@ -12,26 +12,25 @@ export default class HorizontalTrack extends HTMLElement {
     style.textContent = this.style()
     this.e.container.classList.add("container")
     this.e.input.classList.add("label")
-
+    this.e.volume_range.onchange = this.changeGain
     this.e.container.appendChild(this.e.input)
     this.e.container.appendChild(this.e.volume_range)
     shadow.appendChild(this.e.container)
     shadow.appendChild(style)
   }
 
-  set gain(val) {
-    this.e.volume_range.gain = val
-  }
-
   connectedCallback() {
     this.e.input.value = this.getAttribute("label")
   }
-
+  changeGain(value) {
+    console.log(value)
+    globalThis.audioClass.masterGain.gain.value = value / 100
+  }
   style = () => `
     .container{
-        min-height: 50px;
-        padding: 5px;
-        border: solid 1px black;
+      min-height: 50px;
+      padding: 5px;
+      border: solid 1px black;
     }
     .label{
       display: block;

@@ -18,20 +18,19 @@ export default class BasicLamp extends HTMLElement {
     shadow.appendChild(style)
   }
   observedAttributes(name) {
-    if (name === "acitve") this.e.bulb.setAttribute("active", "")
+    if (name === "active") this.e.bulb.toggleAttribute("active")
+    console.log(name)
+  }
+  connectedCallback() {
+    this.hasAttribute("active") && this.e.bulb.setAttribute("active", "")
   }
   style = () => `
-
-  :host{
-    height: 100px;
-    width: 100px;
-    background: #2b2b2b;
-  }
 
   .bulb{
     position: relative;
     height: 10px;
     width: 10px;
+    margin: 0 auto;
     border: solid 1px rgba(255,255,255,0.7);
     border-radius: 50%;
   }
@@ -45,10 +44,17 @@ export default class BasicLamp extends HTMLElement {
     background: rgba(255,255,255,0.7); 
     filter: blur(1px);
   }
-  :host([active]){
-    hegiht:5px;
-    width: 5px;
-    background: red;
+  .bulb[active] .light{
+    display: inline;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -3px;
+    right: 0;
+    height:15px;
+    width: 15px;
+    background: #ff4f4f;
+    filter: blur(4px);
   }
   `
 }
