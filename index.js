@@ -2,14 +2,8 @@ import Audio from "./audio/Audio.js"
 import "./components/input/AudioSelect/AudioSelect.js"
 import "./components/input/VolumeRange/VolumeRange.js"
 import "./components/track/HorizontalTrack/HorizontalTrack.js"
-import "./components/effector/DistortionEffector.js"
-import "./components/effector/btn/BasicToggleBtn/BasicToggleBtn.js"
-import "./components/effector/lamp/BasicLamp/BasicLamp.js"
 import "./components/effector_board/EffectorBoard.js"
-import "./components/effector_board/EmptyBox.js"
-import "./components/effector_board/MoveBox.js"
 import "./components/modal/BasicModal.js"
-import "./components/knob/BasicKnob/BasicKnob.js"
 ;(async () => {
   let stream, ctx
   try {

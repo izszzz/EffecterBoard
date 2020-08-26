@@ -7,6 +7,7 @@ export default class DistortionKnob extends HTMLElement {
     this.upY
     this.distance = 0
     this.value = 0
+    this._angle = 0
     this.max = 100
     this.min = 0
     this.onchange = null
@@ -48,13 +49,14 @@ export default class DistortionKnob extends HTMLElement {
     const per = (deg + 130) / 260
     const value = Math.floor(this.getAttribute("max") * per)
     this.e.input.value = value
-    this.onchange(value)
+    this.value = value
+    this.onchange && this.onchange(value)
   }
   mouseUp = e => {
     const replaced = Number(
       this.e.knob.style.transform.replace(/[^0-9\-]/g, "")
     )
-    this.value = replaced
+    this._angle = replaced
     this.downX = null
     this.downY = null
   }
@@ -73,7 +75,7 @@ export default class DistortionKnob extends HTMLElement {
         )
       )
       this.downX > this.moveX && (this.distance = -this.distance)
-      this.distance = this.distance + this.value
+      this.distance = this.distance + this._angle
       if (this.distance > 130) {
         this.distance = 130
       } else if (this.distance < -130) {
@@ -103,6 +105,7 @@ export default class DistortionKnob extends HTMLElement {
       height: 40px;
       width: 40px;
       margin: 5px auto;
+      border: solid 2px #424242;
       border-radius: 50%;
     }
     .knob:after{

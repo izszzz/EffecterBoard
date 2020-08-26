@@ -1,3 +1,6 @@
+import "../effector/DistortionEffector/DistortionEffector.js"
+import "./EmptyBox.js"
+import "./MoveBox.js"
 export default class EffectorBoard extends HTMLElement {
   constructor() {
     super()
@@ -85,7 +88,6 @@ export default class EffectorBoard extends HTMLElement {
     align-items: center;
     margin: 10px;
     padding: 10px;
-    border: solid 1px black;
   }
   `
 }

@@ -40,7 +40,6 @@ export default class MoveBox extends HTMLElement {
   .container{
     position: relative;
     margin: 0 5px;
-    cursor: pointer;
     user-select: none;
     border-radius: 5px;
   }
@@ -50,14 +49,16 @@ export default class MoveBox extends HTMLElement {
     right: 0;
     height: 20px;
     width: 20px;
-    background: rgba(255,255,255,0.2);
+    margin: 5px;
+    background: white;
     text-align: center;
     line-height: 20px;
     border-radius: 50%;
     opacity: 0.5;
+    cursor: pointer;
   }
   .close-btn:hover{
-    opacity: 1;
+    opacity: 0.8;
   }
   `
 }
