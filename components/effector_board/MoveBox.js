@@ -30,9 +30,10 @@ export default class MoveBox extends HTMLElement {
     this._effector = val
   }
 
-  delete = () => {
+  delete = e => {
     this.effector.disconnectNodes()
     this.e.effectorBoard.removeEffector(this.effector)
+    e.stopPropagation()
     this.remove()
   }
 

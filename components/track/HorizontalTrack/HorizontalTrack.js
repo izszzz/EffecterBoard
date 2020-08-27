@@ -33,12 +33,13 @@ export default class HorizontalTrack extends HTMLElement {
       background: #666666;
       border: solid 1px #777777;
     }
-    .container > *{
+    volume-range{
       margin: 5px;
     }
     .label{
       display: block;
       width: 200px;
+      margin: 5px;
       color: white;
       background: #424242;
     }

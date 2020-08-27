@@ -65,16 +65,16 @@ export default class Audio {
   }
 
   input() {
-    this.e.audioInputSelect.removeAttribute("mounted", "")
-    this.e.audioOutputSelect.removeAttribute("mounted", "")
     this.e.audioInputSelect.setAttribute("mounted", "")
     this.e.audioOutputSelect.setAttribute("mounted", "")
     this.source = this.ctx.createMediaStreamSource(this.stream)
     this.destination = this.ctx.destination
   }
+
   connectInput() {
     this.source.connect(this.masterGain)
   }
+
   disconnectInput() {
     this.source.disconnect(this.masterGain)
   }
@@ -87,7 +87,6 @@ export default class Audio {
 
   effectorBoard() {
     const ef = this.e.effectorBoard
-    ef.removeAttribute("mounted", "")
     ef.setAttribute("mounted", "")
   }
 

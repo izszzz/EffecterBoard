@@ -50,7 +50,6 @@ export default class EffectorBoard extends HTMLElement {
     const mb = document.createElement("move-box"),
       ef = document.createElement(effector)
     ef.setAttribute("slot", "effector")
-    ef.setAttribute("mounted", "")
     mb.appendChild(ef)
     mb.effector = ef
     this.disconnectEffectors()
@@ -86,8 +85,8 @@ export default class EffectorBoard extends HTMLElement {
   .container{
     display: flex;
     align-items: center;
-    margin: 10px;
     padding: 10px;
+    overflow-x: scroll;
   }
   `
 }

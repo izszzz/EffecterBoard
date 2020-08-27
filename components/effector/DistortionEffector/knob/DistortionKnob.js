@@ -63,6 +63,7 @@ export default class DistortionKnob extends HTMLElement {
   mouseDown = e => {
     this.downX = e.pageX
     this.downY = e.pageY
+    e.stopPropagation()
   }
   mouseMove = e => {
     if (this.downX && this.downY) {

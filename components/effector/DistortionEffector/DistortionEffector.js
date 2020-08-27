@@ -43,6 +43,7 @@ export default class DistortionEffector extends HTMLElement {
     this.e.lamp.setAttribute("active", "")
     container.classList.add("container")
     img.setAttribute("src", "./img/distortion_logo.png")
+    img.setAttribute("draggable", false)
     knob_container.classList.add("knob-container")
     knob_container.appendChild(this.e.gainKnob)
     knob_container.appendChild(this.e.waveKnob)
@@ -75,15 +76,10 @@ export default class DistortionEffector extends HTMLElement {
     this._output = val
   }
 
-  attributeChangedCallback(name) {
-    if (name === "mounted") {
-      this.createNodes()
-      this.connectNodes()
-    }
-  }
-
   connectedCallback() {
     this.setAttribute("active", "")
+    this.createNodes()
+    this.connectNodes()
   }
 
   power = () => {
