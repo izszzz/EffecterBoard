@@ -19,22 +19,26 @@ export default class VolumeRange extends HTMLElement {
     this.e.range.addEventListener("input", this._changeRangeValue)
     this.e.input.setAttribute("type", "number")
     this.e.input.addEventListener("input", this._changeInputValue)
-    this.e.container.appendChild(this.e.input)
-    this.e.container.appendChild(this.e.range)
-    shadow.appendChild(this.e.container)
-    shadow.appendChild(style)
+    ;[this.e.input, this.e.range].forEach(e => this.e.container.appendChild(e))
+    ;[this.e.container, style].forEach(e => shadow.appendChild(e))
   }
 
   attributeChangedCallback(name) {
-    if (name === "value") this.onchange && this.onchange(this.value)
+    if (name === "value") this.onchange && this.onchange(+this.value)
   }
   connectedCallback() {
-    this.e.input.setAttribute("max", this.getAttribute("max") || 150)
-    this.e.range.setAttribute("max", this.getAttribute("max") || 150)
-    this.e.input.setAttribute("min", this.getAttribute("min") || 0)
-    this.e.range.setAttribute("min", this.getAttribute("min") || 0)
-    this.e.input.setAttribute("value", this.getAttribute("value") || 100)
-    this.e.range.setAttribute("value", this.getAttribute("value") || 100)
+    const [max, min, value] = [
+      this.getAttribute("max") || 150,
+      this.getAttribute("min") || 0,
+      this.getAttribute("value") || 100,
+    ]
+    ;[this.e.input, this.e.range].forEach(e =>
+      [
+        ["max", max],
+        ["min", min],
+        ["value", value],
+      ].forEach(([key, value]) => e.setAttribute(key, value))
+    )
     this.value = this.getAttribute("value") || 100
   }
 

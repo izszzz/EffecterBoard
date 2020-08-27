@@ -50,7 +50,10 @@ export default class AudioSelect extends HTMLElement {
     audio.disconnectInput()
     try {
       audio.stream = await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: e.currentTarget.value },
+        audio: {
+          deviceId: e.currentTarget.value,
+          ...globalThis.audioConstraint,
+        },
       })
       audio.source = audio.ctx.createMediaStreamSource(audio.stream)
     } catch (e) {

@@ -3,3 +3,4 @@
 ## globalThis
 
 - audioClass
+- audioConstraint
