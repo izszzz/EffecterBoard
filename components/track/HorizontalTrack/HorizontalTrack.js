@@ -18,6 +18,7 @@ export default class HorizontalTrack extends HTMLElement {
     style.textContent = this.style()
     container.classList.add("container")
     this.e.input.classList.add("label")
+    btn_container.classList.add("btn_container")
     this.e.volume_range.onchange = this.changeGain
 
     btn_container.appendChild(this.e.mute_btn)
@@ -46,13 +47,15 @@ export default class HorizontalTrack extends HTMLElement {
       background: #666666;
       border: solid 1px #777777;
     }
-    volume-range{
+    .container > volume-range, .label, .btn_container{
       margin: 5px;
+    }
+    .btn_container{
+      width: 200px;
     }
     .label{
       display: block;
       width: 200px;
-      margin: 5px;
       color: white;
       background: #424242;
     }

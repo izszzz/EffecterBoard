@@ -36,6 +36,7 @@ export default class MuteBtn extends HTMLElement {
       line-height: 25px;
       width: 25px;
       height: 25px;
+      margin: 0;
       background: gray;
       border-radius: 3px;
       cursor: pointer;
