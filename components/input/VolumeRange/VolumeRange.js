@@ -59,18 +59,32 @@ export default class VolumeRange extends HTMLElement {
   }
 
   _style = () => `
-  .container{
-
+  :host{
+    display: block;
   }
   input[type=number]{
     vertical-align: middle;
     width: 50px;
+    margin: 0;
+    color: white;
+    background: #424242;
   }
   input[type=range]{
     vertical-align: middle;
+    -webkit-appearance: none;
     appearance: none;
     height: 2px;
-    background: #dedede;
+    width: 150px;
+    margin: 0;
+    background: #424242;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    width: 10px;
+    height: 5px;
+    background: #e3e3e3;
   }
   input[type=range]:active,input[type=range]:focus{
     outline: none;

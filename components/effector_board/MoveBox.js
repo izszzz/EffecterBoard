@@ -16,7 +16,7 @@ export default class MoveBox extends HTMLElement {
     container.classList.add("container")
     close_btn.classList.add("close-btn")
     close_btn.innerText = "×"
-    close_btn.addEventListener("click", this.removeThis)
+    close_btn.addEventListener("click", this.delete)
     container.appendChild(close_btn)
     container.appendChild(slot)
     shadow.appendChild(container)
@@ -30,7 +30,7 @@ export default class MoveBox extends HTMLElement {
     this._effector = val
   }
 
-  removeThis = () => {
+  delete = () => {
     this.effector.disconnectNodes()
     this.e.effectorBoard.removeEffector(this.effector)
     this.remove()
@@ -46,6 +46,7 @@ export default class MoveBox extends HTMLElement {
   .close-btn{
     display: inline-block;
     position: absolute;
+    z-index: 1;
     right: 0;
     height: 20px;
     width: 20px;

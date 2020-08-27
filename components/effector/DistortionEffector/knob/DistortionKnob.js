@@ -38,9 +38,9 @@ export default class DistortionKnob extends HTMLElement {
   connectedCallback() {
     this.e.label.innerText = this.getAttribute("label")
     ;[
-      ["max", this.getAttribute("max")],
-      ["min", this.getAttribute("min")],
-      ["value", this.getAttribute("value")],
+      ["max", this.getAttribute("max") || 1000],
+      ["min", this.getAttribute("min") || 0],
+      ["value", this.getAttribute("value") || 50],
     ].forEach(([key, value]) => this.e.input.setAttribute(key, value))
   }
 

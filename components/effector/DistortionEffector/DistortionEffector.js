@@ -19,6 +19,7 @@ export default class DistortionEffector extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
       knob_container = document.createElement("div"),
+      img = document.createElement("img"),
       style = document.createElement("style")
 
     style.textContent = this.style()
@@ -41,11 +42,13 @@ export default class DistortionEffector extends HTMLElement {
     this.e.waveKnob.setAttribute("label", "dist")
     this.e.lamp.setAttribute("active", "")
     container.classList.add("container")
+    img.setAttribute("src", "./img/distortion_logo.png")
     knob_container.classList.add("knob-container")
     knob_container.appendChild(this.e.gainKnob)
     knob_container.appendChild(this.e.waveKnob)
     container.appendChild(this.e.lamp)
     container.appendChild(knob_container)
+    container.appendChild(img)
     container.appendChild(this.e.switch)
     shadow.appendChild(container)
     shadow.appendChild(style)
@@ -154,6 +157,12 @@ export default class DistortionEffector extends HTMLElement {
     appearance: none;
     backgroudn: white;
     height: 2px;
+  }
+  img{
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
   }
   toggle-switch{
     position: absolute;

@@ -9,6 +9,7 @@ export default class HorizontalTrack extends HTMLElement {
       container = document.createElement("div"),
       style = document.createElement("style")
 
+    this.e.input.setAttribute("type", "text")
     style.textContent = this.style()
     container.classList.add("container")
     this.e.input.classList.add("label")
@@ -28,11 +29,18 @@ export default class HorizontalTrack extends HTMLElement {
 
   style = () => `
     .container{
-      border: solid 1px black;
+      padding: 10px;
+      background: #666666;
+      border: solid 1px #777777;
+    }
+    .container > *{
+      margin: 5px;
     }
     .label{
       display: block;
-      width: 100px;
+      width: 200px;
+      color: white;
+      background: #424242;
     }
   `
 }
