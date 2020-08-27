@@ -15,10 +15,12 @@ export default class EffectorBoard extends HTMLElement {
     style.textContent = this.style()
     this.setAttribute("effectors", "")
     this.e.container.classList.add("container")
-
-    this.e.container.appendChild(this.e.emptybox)
-    shadow.appendChild(this.e.container)
-    shadow.appendChild(style)
+    ;[
+      [this.e.container, [this.e.emptybox]],
+      [shadow, [this.e.container, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
+    )
   }
 
   get input() {

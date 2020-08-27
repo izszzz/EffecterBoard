@@ -25,7 +25,6 @@ export default class BasicLamp extends HTMLElement {
     this.hasAttribute("active") && this.e.bulb.setAttribute("active", "")
   }
   style = () => `
-
   .bulb{
     position: relative;
     height: 10px;

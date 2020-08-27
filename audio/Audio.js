@@ -65,8 +65,9 @@ export default class Audio {
   }
 
   input() {
-    this.e.audioInputSelect.setAttribute("mounted", "")
-    this.e.audioOutputSelect.setAttribute("mounted", "")
+    ;[this.e.audioInputSelect, this.e.audioOutputSelect].forEach(e =>
+      e.setAttribute("mounted", "")
+    )
     this.source = this.ctx.createMediaStreamSource(this.stream)
     this.destination = this.ctx.destination
   }

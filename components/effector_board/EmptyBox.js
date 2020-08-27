@@ -24,17 +24,15 @@ export default class EmptyBox extends HTMLElement {
 
     this.e.box.classList.add("box")
     this.e.box.addEventListener("click", this.openModal)
-    shadow.appendChild(this.e.box)
-    shadow.appendChild(style)
+    ;[this.e.box, style].forEach(e => shadow.appendChild(e))
     this.EmptyBoxModal()
   }
 
   openModal = () => {
-    const modal = this.e.modal
-    modal.setAttribute("active", "")
-    modal.appendChild(this.e.modal_title)
-    modal.appendChild(this.e.modal_content)
-    modal.appendChild(this.e.modal_style)
+    this.e.modal.setAttribute("active", "")
+    ;[this.e.modal_title, this.e.modal_content, this.e.modal_style].forEach(e =>
+      this.e.modal.appendChild(e)
+    )
   }
 
   EmptyBoxModal = () => {

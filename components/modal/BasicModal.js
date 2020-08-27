@@ -13,21 +13,27 @@ export default class BasicModal extends HTMLElement {
     this.addEventListener("click", this.closeModal)
     content_slot.setAttribute("name", "content")
     title_slot.setAttribute("name", "title")
-    style_slot.setAttribute("name", "title")
+    style_slot.setAttribute("name", "style")
     window.classList.add("window")
     window.addEventListener("click", e => e.stopPropagation())
     close_btn.addEventListener("click", this.closeModal)
     close_btn.classList.add("close-btn")
     close_btn.innerText = "×"
     style.textContent = this.style()
-    header.appendChild(title_slot)
-    header.appendChild(close_btn)
-    window.appendChild(header)
-    window.appendChild(content_slot)
-    shadow.appendChild(window)
-    shadow.appendChild(style)
+    ;[
+      [header, [title_slot, close_btn]],
+      [window, [header, content_slot]],
+      [shadow, [window, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
+    )
   }
-  closeModal = () => this.removeAttribute("active", "")
+
+  closeModal = () => {
+    this.removeAttribute("active")
+    this.textContent = ""
+  }
+
   style = () => `
     :host([active]){
         display: flex;

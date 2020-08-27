@@ -4,7 +4,6 @@ class ToggleSwitch extends HTMLElement {
   }
   constructor() {
     super()
-    this.onclick = null
     this.e = {
       btn: document.createElement("div"),
     }
@@ -13,9 +12,7 @@ class ToggleSwitch extends HTMLElement {
 
     this.addEventListener("click", this.onClick)
     style.textContent = this.style()
-
-    shadow.appendChild(this.e.btn)
-    shadow.appendChild(style)
+    ;[this.e.btn, style].forEach(e => shadow.appendChild(e))
   }
   observedAttributes(name) {
     if (name === "active") {

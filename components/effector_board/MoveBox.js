@@ -3,24 +3,26 @@ export default class MoveBox extends HTMLElement {
     super()
     this.e = {
       effectorBoard: document.querySelector("effector-board"),
+      close_btn: document.createElement("span"),
     }
     this._effector = null
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
-      close_btn = document.createElement("span"),
       slot = document.createElement("slot"),
       style = document.createElement("style")
 
     style.textContent = this.style()
     slot.setAttribute("name", "effector")
     container.classList.add("container")
-    close_btn.classList.add("close-btn")
-    close_btn.innerText = "×"
-    close_btn.addEventListener("click", this.delete)
-    container.appendChild(close_btn)
-    container.appendChild(slot)
-    shadow.appendChild(container)
-    shadow.appendChild(style)
+    this.e.close_btn.classList.add("close-btn")
+    this.e.close_btn.innerText = "×"
+    this.e.close_btn.addEventListener("click", this.delete)
+    ;[
+      [container, [this.e.close_btn, slot]],
+      [shadow, [container, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
+    )
   }
 
   get effector() {
@@ -28,6 +30,10 @@ export default class MoveBox extends HTMLElement {
   }
   set effector(val) {
     this._effector = val
+  }
+
+  disconnectedCallbak() {
+    this.e.close_btn.removeEventListener("click", this.delete)
   }
 
   delete = e => {
