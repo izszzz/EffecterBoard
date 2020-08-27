@@ -29,9 +29,9 @@ export default class DistortionKnob extends HTMLElement {
     this.e.knob.classList.add("knob")
     container.classList.add("container")
     this.e.input.setAttribute("type", "number")
-    container.appendChild(this.e.label)
-    container.appendChild(this.e.knob)
-    container.appendChild(this.e.input)
+    ;[this.e.label, this.e.knob, this.e.input].forEach(e =>
+      container.appendChild(e)
+    )
     shadow.appendChild(container)
     shadow.appendChild(style)
   }

@@ -47,6 +47,9 @@ export default class DistortionEffector extends HTMLElement {
     knob_container.classList.add("knob-container")
     knob_container.appendChild(this.e.gainKnob)
     knob_container.appendChild(this.e.waveKnob)
+    ;[this.e.lamp, knob_container, this.e.switch].forEach(e =>
+      container.appendChild(e)
+    )
     container.appendChild(this.e.lamp)
     container.appendChild(knob_container)
     container.appendChild(img)
@@ -85,7 +88,6 @@ export default class DistortionEffector extends HTMLElement {
   power = () => {
     let elements = [this, this.e.lamp, this.e.switch]
     if (this.hasAttribute("active")) {
-      ;[this, this.e.lamp]
       elements.forEach(e => e.removeAttribute("active"))
       this.disconnectNodes()
     } else {
