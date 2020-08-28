@@ -119,9 +119,10 @@ export default class PanKnob extends HTMLElement {
       text-align: center;
       margin: 0;
       color: white;
-      font-size: 12px;
+      font-size: 10px;
     }
     .knob{
+      user-select: none;
       display: block;
       position: relative;
       background: #3b3b3b;
@@ -143,7 +144,9 @@ export default class PanKnob extends HTMLElement {
       background: white;
     }
     input[type=number]{
+      -webkit-appearance: none;
       width: 50px;
+      margin: 0;
       color: white;
       background: transparent;
       font-size: 10px;

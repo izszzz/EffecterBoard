@@ -15,8 +15,10 @@ export default class HorizontalTrack extends HTMLElement {
     }
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
-      btn_container = document.createElement("div"),
       section = document.createElement("section"),
+      btn_container = document.createElement("div"),
+      input_container = document.createElement("div"),
+      input_left_container = document.createElement("div"),
       style = document.createElement("style")
 
     style.textContent = this.style()
@@ -44,13 +46,18 @@ export default class HorizontalTrack extends HTMLElement {
       [container, "container"],
       [this.e.input, "label"],
       [btn_container, "btn_container"],
+      [input_container, "input_container"],
     ].forEach(([e, name]) => e.classList.add(name))
 
     // appendChild
     ;[
-      [btn_container, [this.e.mute_btn, this.e.channel_btn, this.e.pan_knob]],
-      [section, [this.e.input, this.e.volume_range, btn_container]],
-      [container, [section]],
+      [btn_container, [this.e.mute_btn, this.e.channel_btn]],
+      [
+        input_left_container,
+        [this.e.input, this.e.volume_range, btn_container],
+      ],
+      [input_container, [input_left_container, this.e.pan_knob]],
+      [container, [input_container]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
@@ -83,6 +90,9 @@ export default class HorizontalTrack extends HTMLElement {
     section{
       margin: 5px;
       width: 200px;
+    }
+    .input_container{
+      display: flex;
     }
     .btn_container{
       width: 200px;
