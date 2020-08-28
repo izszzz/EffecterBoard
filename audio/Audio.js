@@ -86,11 +86,6 @@ export default class Audio {
     this.connectInput()
   }
 
-  effectorBoard() {
-    const ef = this.e.effectorBoard
-    ef.setAttribute("mounted", "")
-  }
-
   output() {
     this.effectorBoardOutput
       ? this.effectorBoardOutput.connect(this.destination)
@@ -100,7 +95,6 @@ export default class Audio {
   load() {
     this.input()
     this.masterVolume()
-    this.effectorBoard()
     this.output()
   }
 }

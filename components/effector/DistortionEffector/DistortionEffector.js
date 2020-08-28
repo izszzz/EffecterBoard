@@ -27,7 +27,7 @@ export default class DistortionEffector extends HTMLElement {
       ["label", "gain"],
       ["min", 0],
       ["max", 300],
-      ["value", 150],
+      ["value", 100],
     ].forEach(([key, value]) => this.e.gainKnob.setAttribute(key, value))
     this.e.gainKnob.onchange = this.changeGain
     ;[
@@ -102,6 +102,7 @@ export default class DistortionEffector extends HTMLElement {
   }
 
   connectNodes() {
+    console.log(this.e.gainKnob.value)
     this.gain.gain.value = this.e.gainKnob.value / 100
     this.output = this.wave.connect(this.gain)
   }
