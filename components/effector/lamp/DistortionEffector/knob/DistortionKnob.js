@@ -20,6 +20,9 @@ export default class DistortionKnob extends HTMLElement {
       container = document.createElement("div"),
       style = document.createElement("style")
     style.textContent = this.style()
+
+    this.e.input.setAttribute("type", "number")
+
     //addEventListener
     ;[
       [this.e.input, "change", this.changeInput],
@@ -28,7 +31,6 @@ export default class DistortionKnob extends HTMLElement {
       [document.body, "mouseup", this.mouseUp],
     ].forEach(([e, action, func]) => e.addEventListener(action, func))
 
-    this.e.input.setAttribute("type", "number")
     //add class
     ;[
       [this.e.label, "label"],

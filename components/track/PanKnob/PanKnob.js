@@ -19,16 +19,24 @@ export default class PanKnob extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
       style = document.createElement("style")
-    this.e.input.addEventListener("change", this.changeInput)
-    this.e.knob.addEventListener("mousedown", this.mouseDown)
-    document.body.addEventListener("mousemove", this.mouseMove)
-    document.body.addEventListener("mouseup", this.mouseUp)
-
     style.textContent = this.style()
-    this.e.label.classList.add("label")
-    this.e.knob.classList.add("knob")
-    container.classList.add("container")
     this.e.input.setAttribute("type", "number")
+    //addEventListener
+    ;[
+      [this.e.input, "change", this.changeInput],
+      [this.e.knob, "mousedown", this.mouseDown],
+      [document.body, "mousemove", this.mouseMove],
+      [document.body, "mouseup", this.mouseUp],
+    ].forEach(([e, action, func]) => e.addEventListener(action, func))
+
+    //add class
+    ;[
+      [this.e.label, "label"],
+      [this.e.knob, "knob"],
+      [container, "container"],
+    ].forEach(([e, name]) => e.classList.add(name))
+
+    // appendChild
     ;[
       [container, [this.e.label, this.e.knob, this.e.input]],
       [shadow, [container, style]],
@@ -36,8 +44,10 @@ export default class PanKnob extends HTMLElement {
       children.forEach(child => parent.appendChild(child))
     )
   }
+
   connectedCallback() {
     this.e.label.innerText = this.getAttribute("label")
+    // getAttribute
     ;[this.max, this.min, this.value] = ["max", "min", "value"].map(
       key => +this.getAttribute(key) || 0
     )
@@ -46,22 +56,21 @@ export default class PanKnob extends HTMLElement {
       ["min", this.min],
       ["value", this.value],
     ].forEach(([key, name]) => this.e.input.setAttribute(key, name))
-    this.angle = Math.floor((this.value / this.max) * 260 - 130)
+    this.angle = Math.floor((this.value / (this.max - this.min)) * (260 - 130))
     this.rotateKnob(this.angle)
   }
   changeInput = e => {
     this.value = e.currentTarget.value
-    this.angle = Math.floor((this.value / this.max) * 260 - 130)
+    this.angle = Math.floor((this.value / this.max) * (260 - 130))
     this.rotateKnob(this.angle)
     this.onchange && this.onchange(this.value)
   }
   changeKnob(deg) {
     this.rotateKnob(deg)
-    this.value = Math.floor(this.max * ((deg + 130) / 260))
+    this.value = Math.floor((this.max - this.min) * ((deg + 130) / 260)) - 100
     this.e.input.value = this.value
     this.onchange && this.onchange(this.value)
   }
-
   rotateKnob(deg) {
     this.e.knob.style.transform = `rotate(${deg}deg)`
   }
@@ -96,9 +105,11 @@ export default class PanKnob extends HTMLElement {
     }
   }
   disconnectedCallbak() {
-    this.e.knob.removeEventListener("mouseup", this.mouseUp)
-    document.body.removeEventListener("mousemove", this.mouseMove)
-    document.body.removeEventListener("mousedown", this.mouseDown)
+    ;[
+      [this.e.knob, "mouseup", this.mouseUp],
+      [document.body, "mousemove", this.mouseMove],
+      [docuement.body, "mousedown", this.mouseDown],
+    ].forEach(([e, action, func]) => e.removeEventListener(action, func))
   }
   style = () => `
     .container{
@@ -108,13 +119,14 @@ export default class PanKnob extends HTMLElement {
       text-align: center;
       margin: 0;
       color: white;
+      font-size: 12px;
     }
     .knob{
       display: block;
       position: relative;
       background: #3b3b3b;
-      height: 40px;
-      width: 40px;
+      height: 20px;
+      width: 20px;
       margin: 5px auto;
       border: solid 2px #424242;
       border-radius: 50%;
@@ -134,6 +146,7 @@ export default class PanKnob extends HTMLElement {
       width: 50px;
       color: white;
       background: transparent;
+      font-size: 10px;
     }
   `
 }

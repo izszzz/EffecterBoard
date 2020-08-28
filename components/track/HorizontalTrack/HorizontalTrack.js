@@ -21,10 +21,12 @@ export default class HorizontalTrack extends HTMLElement {
 
     style.textContent = this.style()
     this.e.volume_range.onchange = this.changeGain
+    this.e.pan_knob.onchange = this.changePan
 
     // setAttribute
     ;[
       [this.e.input, [["type", "text"]]],
+      [this.e.pan_knob, [["label", "pan"]]],
       [
         this.e.pan_knob,
         [
@@ -46,8 +48,8 @@ export default class HorizontalTrack extends HTMLElement {
 
     // appendChild
     ;[
-      [btn_container, [this.e.mute_btn, this.e.channel_btn]],
-      [section, [this.e.input, btn_container, this.e.volume_range]],
+      [btn_container, [this.e.mute_btn, this.e.channel_btn, this.e.pan_knob]],
+      [section, [this.e.input, this.e.volume_range, btn_container]],
       [container, [section]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
@@ -66,6 +68,10 @@ export default class HorizontalTrack extends HTMLElement {
     } else {
       globalThis.audioClass.masterGain.gain.value = value / 100
     }
+  }
+
+  changePan = value => {
+    globalThis.audioClass.panner.pan.value = value / 100
   }
 
   style = () => `

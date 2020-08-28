@@ -4,6 +4,7 @@ export default class Audio {
     this._stream = stream
     this._source = null
     this._masterGain = null
+    this._panner = null
     this._effectorBoardOutput = null
     this._destination = null
     this.e = {
@@ -42,6 +43,13 @@ export default class Audio {
     this._masterGain = this.setterCheck(val, GainNode)
   }
 
+  get panner() {
+    return this._pan
+  }
+  set panner(val) {
+    this._pan = val
+  }
+
   get destination() {
     return this._destination
   }
@@ -68,16 +76,19 @@ export default class Audio {
     ;[this.e.audioInputSelect, this.e.audioOutputSelect].forEach(e =>
       e.setAttribute("mounted", "")
     )
+    this.panner = this.ctx.createStereoPanner()
     this.source = this.ctx.createMediaStreamSource(this.stream)
     this.destination = this.ctx.destination
   }
 
   connectInput() {
-    this.source.connect(this.masterGain)
+    ;[this.source, this.panner, this.masterGain].reduce((a, b) => a.connect(b))
   }
 
   disconnectInput() {
-    this.source.disconnect(this.masterGain)
+    ;[this.source, this.panner, this.masterGain].reduce((a, b) =>
+      a.disconnect(b)
+    )
   }
 
   masterVolume() {

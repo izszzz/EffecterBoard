@@ -9,14 +9,13 @@ export default class ChannelBtn extends HTMLElement {
     ;[div, style].forEach(e => shadow.appendChild(e))
   }
 
-  connectedCallback() {
-    globalThis
-  }
-
   onClick = () => {
     this.toggleAttribute("active")
     if (this.hasAttribute("active")) {
+      console.log(globalThis.audioClass)
+      globalThis.audioClass.disconnectInput()
     } else {
+      globalThis.audioClass
     }
   }
 
