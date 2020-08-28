@@ -32,6 +32,7 @@ export default class MuteBtn extends HTMLElement {
     :host{
       user-select: none;
       display: inline-block;
+      vertical-align: middle;
       text-align: center;
       line-height: 25px;
       width: 25px;

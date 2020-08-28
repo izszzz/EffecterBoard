@@ -1,31 +1,58 @@
-import "../btn/MuteBtn.js"
+import "../btn/MuteBtn/MuteBtn.js"
+import "../btn/ChannelBtn/ChannelBtn.js"
 import "./volume/VolumeRange.js"
+import "../PanKnob/PanKnob.js"
 export default class HorizontalTrack extends HTMLElement {
   constructor() {
     super()
     this.gainValue = null
     this.e = {
       volume_range: document.createElement("volume-range"),
+      pan_knob: document.createElement("pan-knob"),
       mute_btn: document.createElement("mute-btn"),
+      channel_btn: document.createElement("channel-btn"),
       input: document.createElement("input"),
     }
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
       btn_container = document.createElement("div"),
+      section = document.createElement("section"),
       style = document.createElement("style")
 
-    this.e.input.setAttribute("type", "text")
     style.textContent = this.style()
-    container.classList.add("container")
-    this.e.input.classList.add("label")
-    btn_container.classList.add("btn_container")
     this.e.volume_range.onchange = this.changeGain
 
-    btn_container.appendChild(this.e.mute_btn)
-    ;[this.e.input, btn_container, this.e.volume_range].forEach(e =>
-      container.appendChild(e)
+    // setAttribute
+    ;[
+      [this.e.input, [["type", "text"]]],
+      [
+        this.e.pan_knob,
+        [
+          ["max", 100],
+          ["min", -100],
+          ["value", 0],
+        ],
+      ],
+    ].forEach(([parent, children]) =>
+      children.forEach(([key, value]) => parent.setAttribute(key, value))
     )
-    ;[container, style].forEach(e => shadow.appendChild(e))
+
+    // add classList
+    ;[
+      [container, "container"],
+      [this.e.input, "label"],
+      [btn_container, "btn_container"],
+    ].forEach(([e, name]) => e.classList.add(name))
+
+    // appendChild
+    ;[
+      [btn_container, [this.e.mute_btn, this.e.channel_btn]],
+      [section, [this.e.input, btn_container, this.e.volume_range]],
+      [container, [section]],
+      [shadow, [container, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
+    )
   }
 
   connectedCallback() {
@@ -47,15 +74,21 @@ export default class HorizontalTrack extends HTMLElement {
       background: #666666;
       border: solid 1px #777777;
     }
-    .container > volume-range, .label, .btn_container{
+    section{
       margin: 5px;
+      width: 200px;
     }
     .btn_container{
       width: 200px;
+      margin: 3px 0;
+    }
+    .btn_container > * {
+      margin-right: 3px;
     }
     .label{
       display: block;
       width: 200px;
+      margin: 0;
       color: white;
       background: #424242;
     }

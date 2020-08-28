@@ -1,4 +1,4 @@
-import "../effector/DistortionEffector/DistortionEffector.js"
+import "../effector/lamp/DistortionEffector/DistortionEffector.js"
 import "./EmptyBox.js"
 import "./MoveBox.js"
 export default class EffectorBoard extends HTMLElement {
@@ -13,8 +13,8 @@ export default class EffectorBoard extends HTMLElement {
       emptybox: document.createElement("empty-box"),
     }
     style.textContent = this.style()
-    this.setAttribute("effectors", "")
     this.e.container.classList.add("container")
+    //appendChild
     ;[
       [this.e.container, [this.e.emptybox]],
       [shadow, [this.e.container, style]],

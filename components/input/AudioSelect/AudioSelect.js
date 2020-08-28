@@ -5,9 +5,11 @@ export default class AudioSelect extends HTMLElement {
   constructor() {
     super()
     this.e = { select: document.createElement("select") }
+    const shadow = this.attachShadow({ mode: "open" }),
+      style = document.createElement("style")
+    style.textContent = this.style()
     this.e.select.addEventListener("change", this.selectAudio)
-    const shadow = this.attachShadow({ mode: "open" })
-    shadow.appendChild(this.e.select)
+    ;[this.e.select, style].forEach(e => shadow.appendChild(e))
   }
 
   attributeChangedCallback(name) {
@@ -61,5 +63,6 @@ export default class AudioSelect extends HTMLElement {
     }
     audio.connectInput()
   }
+  style = () => ``
 }
 customElements.define("audio-select", AudioSelect)

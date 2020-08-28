@@ -1,4 +1,4 @@
-export default class DistortionKnob extends HTMLElement {
+export default class PanKnob extends HTMLElement {
   constructor() {
     super()
     this.downX = null
@@ -137,4 +137,4 @@ export default class DistortionKnob extends HTMLElement {
     }
   `
 }
-customElements.define("distortion-knob", DistortionKnob)
+customElements.define("pan-knob", PanKnob)

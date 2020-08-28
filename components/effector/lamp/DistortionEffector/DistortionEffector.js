@@ -44,18 +44,15 @@ export default class DistortionEffector extends HTMLElement {
     container.classList.add("container")
     img.setAttribute("src", "./img/distortion_logo.png")
     img.setAttribute("draggable", false)
+
     knob_container.classList.add("knob-container")
-    knob_container.appendChild(this.e.gainKnob)
-    knob_container.appendChild(this.e.waveKnob)
-    ;[this.e.lamp, knob_container, this.e.switch].forEach(e =>
-      container.appendChild(e)
+    ;[
+      [knob_container, [this.e.gainKnob, this.e.waveKnob]],
+      [container, [this.e.lamp, knob_container, img, this.e.switch]],
+      [shadow, [container, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
     )
-    container.appendChild(this.e.lamp)
-    container.appendChild(knob_container)
-    container.appendChild(img)
-    container.appendChild(this.e.switch)
-    shadow.appendChild(container)
-    shadow.appendChild(style)
   }
 
   get gain() {
@@ -102,7 +99,6 @@ export default class DistortionEffector extends HTMLElement {
   }
 
   connectNodes() {
-    console.log(this.e.gainKnob.value)
     this.gain.gain.value = this.e.gainKnob.value / 100
     this.output = this.wave.connect(this.gain)
   }
