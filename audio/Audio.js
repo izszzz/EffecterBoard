@@ -6,10 +6,11 @@ export default class Audio {
     this._masterGain = null
     this._panner = null
     this._effectorBoardOutput = null
+    this._analyser = null
     this._destination = null
     this.e = {
-      audioInputSelect: document.querySelector("audio-select[kind=input]"),
-      audioOutputSelect: document.querySelector("audio-select[kind=output]"),
+      inputSelect: document.querySelector("audio-select[kind=input]"),
+      outputSelect: document.querySelector("audio-select[kind=output]"),
       horizontalTrack: document.querySelector("horizontal-track"),
       effectorBoard: document.querySelector("effector-board"),
     }
@@ -44,10 +45,17 @@ export default class Audio {
   }
 
   get panner() {
-    return this._pan
+    return this._panner
   }
   set panner(val) {
-    this._pan = val
+    this._panner = this.setterCheck(val, StereoPannerNode)
+  }
+
+  get analyser() {
+    return this._analyser
+  }
+  set analyser(val) {
+    this._analyser = this.setterCheck(val, AnalyserNode)
   }
 
   get destination() {
@@ -73,21 +81,25 @@ export default class Audio {
   }
 
   input() {
-    ;[this.e.audioInputSelect, this.e.audioOutputSelect].forEach(e =>
+    ;[this.e.inputSelect, this.e.outputSelect].forEach(e =>
       e.setAttribute("mounted", "")
     )
+    this.analyser = this.ctx.createAnalyser()
+    this.analyser.fftSize = 256
     this.panner = this.ctx.createStereoPanner()
     this.source = this.ctx.createMediaStreamSource(this.stream)
     this.destination = this.ctx.destination
   }
 
   connectInput() {
-    ;[this.source, this.panner, this.masterGain].reduce((a, b) => a.connect(b))
+    ;[this.source, this.analyser, this.panner, this.masterGain].reduce((a, b) =>
+      a.connect(b)
+    )
   }
 
   disconnectInput() {
-    ;[this.source, this.panner, this.masterGain].reduce((a, b) =>
-      a.disconnect(b)
+    ;[this.source, this.analyser, this.panner, this.masterGain].reduce(
+      (a, b) => a && a.disconnect(b)
     )
   }
 
@@ -98,9 +110,13 @@ export default class Audio {
   }
 
   output() {
-    this.effectorBoardOutput
-      ? this.effectorBoardOutput.connect(this.destination)
-      : this.masterGain.connect(this.destination)
+    if (this.effectorBoardOutput) {
+      ;[this.effectorBoardOutput, this.destination].reduce((a, b) =>
+        a.connect(b)
+      )
+    } else {
+      ;[this.masterGain, this.destination].reduce((a, b) => a.connect(b))
+    }
   }
 
   load() {

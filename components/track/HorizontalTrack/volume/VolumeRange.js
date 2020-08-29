@@ -70,17 +70,19 @@ export default class VolumeRange extends HTMLElement {
     vertical-align: middle;
     width: 50px;
     margin: 0;
-    color: white;
-    background: #424242;
+    color: var(--text-invert-color);
+    background: var(--input-bg-color);
+    font-size: var(--font-size-normal);
   }
+
   input[type=range]{
-    vertical-align: middle;
     -webkit-appearance: none;
     appearance: none;
+    vertical-align: middle;
     height: 2px;
     width: 150px;
     margin: 0;
-    background: #424242;
+    background: var(--input-bg-color);
   }
   input[type=range]::-webkit-slider-thumb{
     -webkit-appearance: none;

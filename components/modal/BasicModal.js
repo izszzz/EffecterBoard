@@ -10,16 +10,26 @@ export default class BasicModal extends HTMLElement {
       title_slot = document.createElement("slot"),
       style_slot = document.createElement("slot")
 
-    this.addEventListener("click", this.closeModal)
-    content_slot.setAttribute("name", "content")
-    title_slot.setAttribute("name", "title")
-    style_slot.setAttribute("name", "style")
     window.classList.add("window")
-    window.addEventListener("click", e => e.stopPropagation())
-    close_btn.addEventListener("click", this.closeModal)
     close_btn.classList.add("close-btn")
     close_btn.innerText = "×"
     style.textContent = this.style()
+
+    // addEventListener
+    ;[
+      [this, "click", this.closeModal],
+      [window, "click", e => e.stopPropagation()],
+      [close_btn, "click", this.closeModal],
+    ].forEach(([e, action, func]) => e.addEventListener(action, func))
+
+    // setAttribute
+    ;[
+      [content_slot, "name", "content"],
+      [title_slot, "name", "title"],
+      [style_slot, "name", "stle"],
+    ].forEach(([e, attr, name]) => e.setAttribute(attr, name))
+
+    //appendChild
     ;[
       [header, [title_slot, close_btn]],
       [window, [header, content_slot]],
@@ -65,8 +75,9 @@ export default class BasicModal extends HTMLElement {
     }
     ::slotted([slot="title"]){
       margin: 0 10px;
-      font-size: 18px;
+      font-size: var(--font-size-big);
       font-weight: 200;
+      color: var(--text-main-color)
     }
     .close-btn{
       text-align: center;

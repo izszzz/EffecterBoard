@@ -104,9 +104,11 @@ export default class EmptyBox extends HTMLElement {
     list-style: none;
   }
   li{
-    padding: 5px 10px;
-    border-bottom: solid 1px black;
     cursor: pointer;
+    padding: 5px 10px;
+    color: var(--text-main-color);
+    border-bottom: solid 1px black;
+    font-size: var(--font-size-normal);
   }
   li:last-child{
     border-bottom: 0;

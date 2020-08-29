@@ -2,36 +2,41 @@ import "../btn/MuteBtn/MuteBtn.js"
 import "../btn/ChannelBtn/ChannelBtn.js"
 import "./volume/VolumeRange.js"
 import "../PanKnob/PanKnob.js"
+import "../VolumeMeter/VolumeMeter.js"
 export default class HorizontalTrack extends HTMLElement {
   constructor() {
     super()
     this.gainValue = null
     this.e = {
-      volume_range: document.createElement("volume-range"),
-      pan_knob: document.createElement("pan-knob"),
-      mute_btn: document.createElement("mute-btn"),
-      channel_btn: document.createElement("channel-btn"),
+      volumeMeter: document.createElement("volume-meter"),
+      volumeRange: document.createElement("volume-range"),
+      panKnob: document.createElement("pan-knob"),
+      muteBtn: document.createElement("mute-btn"),
+      channelBtn: document.createElement("channel-btn"),
       input: document.createElement("input"),
     }
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
-      section = document.createElement("section"),
-      btn_container = document.createElement("div"),
-      input_container = document.createElement("div"),
-      input_left_container = document.createElement("div"),
+      btnContainer = document.createElement("div"),
+      inputContainer = document.createElement("div"),
+      inputLeftContainer = document.createElement("div"),
       style = document.createElement("style")
 
     style.textContent = this.style()
-    this.e.volume_range.onchange = this.changeGain
-    this.e.pan_knob.onchange = this.changePan
+
+    // onchangeh
+    ;[
+      [this.e.volumeRange, this.changeGain],
+      [this.e.panKnob, this.changePan],
+    ].forEach(([e, func]) => (e.onchange = func))
 
     // setAttribute
     ;[
       [this.e.input, [["type", "text"]]],
-      [this.e.pan_knob, [["label", "pan"]]],
       [
-        this.e.pan_knob,
+        this.e.panKnob,
         [
+          ["label", "pan"],
           ["max", 100],
           ["min", -100],
           ["value", 0],
@@ -45,19 +50,16 @@ export default class HorizontalTrack extends HTMLElement {
     ;[
       [container, "container"],
       [this.e.input, "label"],
-      [btn_container, "btn_container"],
-      [input_container, "input_container"],
+      [btnContainer, "btn_container"],
+      [inputContainer, "input_container"],
     ].forEach(([e, name]) => e.classList.add(name))
 
     // appendChild
     ;[
-      [btn_container, [this.e.mute_btn, this.e.channel_btn]],
-      [
-        input_left_container,
-        [this.e.input, this.e.volume_range, btn_container],
-      ],
-      [input_container, [input_left_container, this.e.pan_knob]],
-      [container, [input_container]],
+      [btnContainer, [this.e.muteBtn, this.e.channelBtn]],
+      [inputLeftContainer, [this.e.input, this.e.volumeRange, btnContainer]],
+      [inputContainer, [inputLeftContainer, this.e.panKnob]],
+      [container, [inputContainer, this.e.volumeMeter]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
@@ -66,12 +68,12 @@ export default class HorizontalTrack extends HTMLElement {
 
   connectedCallback() {
     this.e.input.value = this.getAttribute("label")
-    this.e.mute_btn.gainValue = this.e.volume_range.value / 100
+    this.e.muteBtn.gainValue = this.e.volumeRange.value / 100
   }
 
   changeGain = value => {
-    if (this.e.mute_btn.hasAttribute("active")) {
-      this.e.mute_btn.gainValue = value / 100
+    if (this.e.muteBtn.hasAttribute("active")) {
+      this.e.muteBtn.gainValue = value / 100
     } else {
       globalThis.audioClass.masterGain.gain.value = value / 100
     }
@@ -83,7 +85,7 @@ export default class HorizontalTrack extends HTMLElement {
 
   style = () => `
     .container{
-      padding: 10px;
+      display: flex;
       background: #666666;
       border: solid 1px #777777;
     }
@@ -93,6 +95,7 @@ export default class HorizontalTrack extends HTMLElement {
     }
     .input_container{
       display: flex;
+      margin: 10px;
     }
     .btn_container{
       width: 200px;
@@ -105,8 +108,9 @@ export default class HorizontalTrack extends HTMLElement {
       display: block;
       width: 200px;
       margin: 0;
-      color: white;
-      background: #424242;
+      color: var(--text-invert-color);
+      background: var(--input-bg-color);
+      font-size: var(--font-size-normal);
     }
   `
 }

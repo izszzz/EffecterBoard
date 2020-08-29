@@ -1,8 +1,4 @@
 import Audio from "./audio/Audio.js"
-import "./components/input/AudioSelect/AudioSelect.js"
-import "./components/track/HorizontalTrack/HorizontalTrack.js"
-import "./components/effector_board/EffectorBoard.js"
-import "./components/modal/BasicModal.js"
 ;(async () => {
   let stream, ctx
   globalThis.audioConstraint = {
@@ -17,6 +13,10 @@ import "./components/modal/BasicModal.js"
   } catch (e) {
     console.log(e)
   }
+  import("./components/input/AudioSelect/AudioSelect.js")
+  import("./components/track/HorizontalTrack/HorizontalTrack.js")
+  import("./components/effector_board/EffectorBoard.js")
+  import("./components/modal/BasicModal.js")
   globalThis.audioClass = new Audio(ctx, stream)
   globalThis.audioClass.load()
 })()

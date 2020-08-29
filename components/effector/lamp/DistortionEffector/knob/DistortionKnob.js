@@ -118,6 +118,7 @@ export default class DistortionKnob extends HTMLElement {
       text-align: center;
       margin: 0;
       color: white;
+      font-size: var(--font-size-normal);
     }
     .knob{
       display: block;
@@ -144,6 +145,7 @@ export default class DistortionKnob extends HTMLElement {
       width: 50px;
       color: white;
       background: transparent;
+      font-size: var(--font-size-normal);
     }
   `
 }

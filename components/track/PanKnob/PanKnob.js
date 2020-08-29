@@ -119,7 +119,7 @@ export default class PanKnob extends HTMLElement {
       text-align: center;
       margin: 0;
       color: white;
-      font-size: 10px;
+      font-size: var(--font-size-small);
     }
     .knob{
       user-select: none;
@@ -147,9 +147,9 @@ export default class PanKnob extends HTMLElement {
       -webkit-appearance: none;
       width: 50px;
       margin: 0;
-      color: white;
-      background: transparent;
-      font-size: 10px;
+      color: var(--text-invert-color);
+      background: var(--input-bg-color);
+      font-size: var(--font-size-small);
     }
   `
 }
