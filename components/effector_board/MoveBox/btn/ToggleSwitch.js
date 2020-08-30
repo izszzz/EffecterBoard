@@ -4,15 +4,11 @@ class ToggleSwitch extends HTMLElement {
   }
   constructor() {
     super()
-    this.e = {
-      btn: document.createElement("div"),
-    }
     const shadow = this.attachShadow({ mode: "open" }),
       style = document.createElement("style")
-
     this.addEventListener("click", this.onClick)
     style.textContent = this.style()
-    ;[this.e.btn, style].forEach(e => shadow.appendChild(e))
+    ;[style].forEach(e => shadow.appendChild(e))
   }
   observedAttributes(name) {
     if (name === "active") {
@@ -21,30 +17,27 @@ class ToggleSwitch extends HTMLElement {
   }
 
   onClick() {
-    this.e.btn.toggleAttribute("active")
     this.toggleAttribute("active")
   }
 
   style = () => `
-      *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
       :host{
         user-select: none;
+        position: absolute;
         display: inline-block;
         width: 40px;
+        height: 20px;
         border: solid 2px white;
         border-radius: 40px;
         cursor: pointer;
         transition: border var(--theme-change-speed, 0.3s) ease;
       }
-      div{
+      :host:before{
+        content: "";
+        vertical-align: middle;
         position: relative;
         display: inline-block;
-        left:0;
-        vertical-align: middle;
+        left: 0;
         width: 18px;
         height: 18px;
         margin: 1px;
@@ -54,7 +47,7 @@ class ToggleSwitch extends HTMLElement {
           left 0.3s ease,
           background var(--theme-change-speed, 0.3s) ease;
       }
-      div[active]{
+      :host([active]):before{
         left: 20px;
       }
   `

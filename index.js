@@ -1,5 +1,5 @@
 import Audio from "./audio/Audio.js"
-import("./components/input/USBSelect/USBSelect.js")
+import "./components/input/SerialPort/SerialPort.js"
 ;(async () => {
   let stream, ctx
   globalThis.audioConstraint = {

@@ -17,7 +17,6 @@ export default class VolumeMeter extends HTMLElement {
       this.e.canvas.width,
       this.e.canvas.height
     )
-    console.log(this.e.canvas.height)
     const analyser = globalThis.audioClass.analyser,
       bufferLength = analyser.frequencyBinCount,
       dataArray = new Uint8Array(bufferLength)

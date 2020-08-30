@@ -1,6 +1,4 @@
 import "./knob/DistortionKnob.js"
-import "./lamp/BasicLamp.js"
-import "./btn/ToggleSwitch.js"
 export default class DistortionEffector extends HTMLElement {
   static get observedAttributes() {
     return ["mounted"]
@@ -11,10 +9,8 @@ export default class DistortionEffector extends HTMLElement {
     this._gain = null
     this._wave = null
     this.e = {
-      lamp: document.createElement("basic-lamp"),
       gainKnob: document.createElement("distortion-knob"),
       waveKnob: document.createElement("distortion-knob"),
-      switch: document.createElement("toggle-switch"),
     }
     const shadow = this.attachShadow({ mode: "open" }),
       container = document.createElement("div"),
@@ -38,9 +34,7 @@ export default class DistortionEffector extends HTMLElement {
     ].forEach(([key, value]) => this.e.waveKnob.setAttribute(key, value))
     this.e.waveKnob.onchange = this.changeWave
 
-    this.e.switch.addEventListener("click", this.power)
     this.e.waveKnob.setAttribute("label", "dist")
-    this.e.lamp.setAttribute("active", "")
     container.classList.add("container")
     img.setAttribute("src", "./img/distortion_logo.png")
     img.setAttribute("draggable", false)
@@ -48,7 +42,7 @@ export default class DistortionEffector extends HTMLElement {
     knob_container.classList.add("knob-container")
     ;[
       [knob_container, [this.e.gainKnob, this.e.waveKnob]],
-      [container, [this.e.lamp, knob_container, img, this.e.switch]],
+      [container, [knob_container, img]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
@@ -158,14 +152,6 @@ export default class DistortionEffector extends HTMLElement {
     left: 0;
     right: 0;
     margin: auto;
-  }
-  toggle-switch{
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0 auto;
-    margin-bottom: 30px;
   }
   `
 }

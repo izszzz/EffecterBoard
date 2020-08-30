@@ -1,0 +1,7 @@
+{
+  "name": "effectorboard.js",
+  "version": "1.0",
+  "description": "virtual effector board",
+  "permissions": ["serial"],
+  "manifest_version": 2
+}
