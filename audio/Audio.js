@@ -85,7 +85,7 @@ export default class Audio {
       e.setAttribute("mounted", "")
     )
     this.analyser = this.ctx.createAnalyser()
-    this.analyser.fftSize = 256
+    this.analyser.fftSize = 1024
     this.panner = this.ctx.createStereoPanner()
     this.source = this.ctx.createMediaStreamSource(this.stream)
     this.destination = this.ctx.destination

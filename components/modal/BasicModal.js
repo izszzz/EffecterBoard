@@ -26,7 +26,7 @@ export default class BasicModal extends HTMLElement {
     ;[
       [content_slot, "name", "content"],
       [title_slot, "name", "title"],
-      [style_slot, "name", "stle"],
+      [style_slot, "name", "style"],
     ].forEach(([e, attr, name]) => e.setAttribute(attr, name))
 
     //appendChild

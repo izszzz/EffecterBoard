@@ -11,21 +11,28 @@ export default class VolumeMeter extends HTMLElement {
     shadow.appendChild(this.e.canvas)
   }
   connectedCallback() {
+    this.ctx.fillRect(
+      0,
+      this.e.canvas.height,
+      this.e.canvas.width,
+      this.e.canvas.height
+    )
+    console.log(this.e.canvas.height)
     const analyser = globalThis.audioClass.analyser,
       bufferLength = analyser.frequencyBinCount,
       dataArray = new Uint8Array(bufferLength)
-    setInterval(() => this.draw(analyser, dataArray, bufferLength), 800)
+    setInterval(() => this.draw(analyser, dataArray, bufferLength), 200)
   }
   draw(analyser, dataArray, bufferLength) {
     analyser.getByteFrequencyData(dataArray)
-    console.log(dataArray[80])
-    const average = dataArray.reduce((a, b) => a + b) / bufferLength
-    console.log(average)
+    const sum = dataArray.reduce((a, b) => a + b),
+      average = (sum / bufferLength) * 2
+
     this.ctx.clearRect(0, 0, this.e.canvas.width, this.e.canvas.height)
-    this.ctx.fillStyle = "black"
+    this.ctx.fillStyle = "lightgreen"
     this.ctx.fillRect(
       0,
-      100 - average,
+      this.e.canvas.height - average,
       this.e.canvas.width,
       this.e.canvas.height
     )
