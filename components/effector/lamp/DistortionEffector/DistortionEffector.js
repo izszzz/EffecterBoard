@@ -18,28 +18,45 @@ export default class DistortionEffector extends HTMLElement {
       img = document.createElement("img"),
       style = document.createElement("style")
 
+    //setAttribute
     style.textContent = this.style()
     ;[
-      ["label", "gain"],
-      ["min", 0],
-      ["max", 300],
-      ["value", 100],
-    ].forEach(([key, value]) => this.e.gainKnob.setAttribute(key, value))
-    this.e.gainKnob.onchange = this.changeGain
+      [
+        this.e.gainKnob,
+        [
+          ["label", "gain"],
+          ["min", 0],
+          ["max", 300],
+          ["value", 100],
+        ],
+      ],
+      [
+        this.e.waveKnob,
+        [
+          ["label", "dist"],
+          ["min", 0],
+          ["max", 500],
+          ["value", 250],
+        ],
+      ],
+      [
+        img,
+        [
+          ["src", "./img/distortion_logo.png"],
+          ["draggable", false],
+        ],
+      ],
+    ].forEach(([e, classes]) =>
+      classes.forEach(([key, val]) => e.setAttribute(key, val))
+    )
+
+    // add class
     ;[
-      ["label", "dist"],
-      ["min", 0],
-      ["max", 500],
-      ["value", 250],
-    ].forEach(([key, value]) => this.e.waveKnob.setAttribute(key, value))
-    this.e.waveKnob.onchange = this.changeWave
+      [container, "container"],
+      [knob_container, "knob-container"],
+    ].forEach(([e, val]) => e.classList.add(val))
 
-    this.e.waveKnob.setAttribute("label", "dist")
-    container.classList.add("container")
-    img.setAttribute("src", "./img/distortion_logo.png")
-    img.setAttribute("draggable", false)
-
-    knob_container.classList.add("knob-container")
+    // appendChild
     ;[
       [knob_container, [this.e.gainKnob, this.e.waveKnob]],
       [container, [knob_container, img]],
@@ -74,17 +91,6 @@ export default class DistortionEffector extends HTMLElement {
     this.setAttribute("active", "")
     this.createNodes()
     this.connectNodes()
-  }
-
-  power = () => {
-    let elements = [this, this.e.lamp, this.e.switch]
-    if (this.hasAttribute("active")) {
-      elements.forEach(e => e.removeAttribute("active"))
-      this.disconnectNodes()
-    } else {
-      elements.forEach(e => e.setAttribute("active", ""))
-      this.connectNodes()
-    }
   }
 
   createNodes() {
