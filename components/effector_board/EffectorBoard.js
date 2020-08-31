@@ -1,4 +1,4 @@
-import "../effector/lamp/DistortionEffector/DistortionEffector.js"
+import "../effector/DistortionEffector/DistortionEffector.js"
 import "./EmptyBox.js"
 import "./MoveBox/MoveBox.js"
 export default class EffectorBoard extends HTMLElement {

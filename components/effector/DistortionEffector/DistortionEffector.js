@@ -1,8 +1,5 @@
 import "./knob/DistortionKnob.js"
 export default class DistortionEffector extends HTMLElement {
-  static get observedAttributes() {
-    return ["mounted"]
-  }
   constructor() {
     super()
     this._output = null
