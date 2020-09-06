@@ -33,6 +33,7 @@ export default class SerialPort extends HTMLElement {
         const move_boxes = document
           .querySelector("effector-board")
           .shadowRoot.querySelectorAll("move-box")
+        console.log(replaced)
         move_boxes[+replaced].power()
       }
     }
@@ -45,7 +46,7 @@ export default class SerialPort extends HTMLElement {
         text += value.replace(/\s+/g, "")
         console.log(text)
       }
-      if (text === "HelloWorld") {
+      if (text === "HelloWorld0") {
         console.log("setup complete")
         break
       }

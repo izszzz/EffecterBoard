@@ -1,9 +1,9 @@
 export default class ChannelBtn extends HTMLElement {
   constructor() {
     super()
-    const shadow = this.attachShadow({ mode: "open" }),
-      div = document.createElement("div"),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let div, style
+    ;[div, style] = ["div", "style"].map(tag => document.createElement(tag))
     style.textContent = this.style()
     this.addEventListener("click", this.onClick)
     ;[div, style].forEach(e => shadow.appendChild(e))
@@ -11,12 +11,6 @@ export default class ChannelBtn extends HTMLElement {
 
   onClick = () => {
     this.toggleAttribute("active")
-    if (this.hasAttribute("active")) {
-      console.log(globalThis.audioClass)
-      globalThis.audioClass.disconnectInput()
-    } else {
-      globalThis.audioClass
-    }
   }
 
   style = () => `

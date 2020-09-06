@@ -1,34 +1,38 @@
-export default class BasicModal extends HTMLElement {
+class BasicModal extends HTMLElement {
   constructor() {
     super()
     const shadow = this.attachShadow({ mode: "open" }),
-      window = document.createElement("div"),
-      header = document.createElement("header"),
-      style = document.createElement("style"),
-      close_btn = document.createElement("div"),
-      content_slot = document.createElement("slot"),
-      title_slot = document.createElement("slot"),
-      style_slot = document.createElement("slot")
-
-    window.classList.add("window")
-    close_btn.classList.add("close-btn")
-    close_btn.innerText = "×"
-    style.textContent = this.style()
-
+      [
+        title_slot,
+        content_slot,
+        style_slot,
+        window,
+        close_btn,
+        header,
+        style,
+      ] = [
+        ...Array(3).fill("slot"),
+        ...Array(2).fill("div"),
+        "header",
+        "style",
+      ].map(tag => document.createElement(tag))
+    // add class
+    ;[
+      [window, "window"],
+      [close_btn, "close-btn"],
+    ].forEach(([e, val]) => e.classList.add(val))
     // addEventListener
     ;[
       [this, "click", this.closeModal],
       [window, "click", e => e.stopPropagation()],
       [close_btn, "click", this.closeModal],
     ].forEach(([e, action, func]) => e.addEventListener(action, func))
-
     // setAttribute
     ;[
       [content_slot, "name", "content"],
       [title_slot, "name", "title"],
       [style_slot, "name", "style"],
     ].forEach(([e, attr, name]) => e.setAttribute(attr, name))
-
     //appendChild
     ;[
       [header, [title_slot, close_btn]],
@@ -37,47 +41,48 @@ export default class BasicModal extends HTMLElement {
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
     )
+    close_btn.innerText = "×"
+    style.textContent = this.addStyle()
   }
 
   closeModal = () => {
     this.removeAttribute("active")
-    this.textContent = ""
   }
 
-  style = () => `
+  addStyle = () => `
     :host([active]){
-        display: flex;
+      display: flex;
     }
     :host{
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        justify-content: center;
-        align-items: center;
-        height:100%;
-        width: 100%;
-        background: rgba(0,0,0,0.2);
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      justify-content: center;
+      align-items: center;
+      height:100%;
+      width: 100%;
+      background: rgba(0,0,0,0.2);
     }
     .window{
-        display: inline-block;
-        background: white;
-        border-radius: 5px;
+      display: inline-block;
+      background: white;
+      border-radius: var(--main-border-radius, 5px);
     }
     header{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        min-width: 500px;
-        border-bottom: solid 1px black;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 500px;
+      border-bottom: solid 1px black;
     }
     ::slotted([slot="title"]){
       margin: 0 10px;
-      font-size: var(--font-size-big);
+      font-size: var(--big-font-size, 13px);
       font-weight: 200;
-      color: var(--text-main-color)
+      color: var(--main-font-color, #2b2b2b);
     }
     .close-btn{
       text-align: center;

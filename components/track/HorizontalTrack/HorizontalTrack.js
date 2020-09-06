@@ -7,34 +7,44 @@ export default class HorizontalTrack extends HTMLElement {
   constructor() {
     super()
     this.gainValue = null
-    this.e = {
-      volumeMeter: document.createElement("volume-meter"),
-      volumeRange: document.createElement("volume-range"),
-      panKnob: document.createElement("pan-knob"),
-      muteBtn: document.createElement("mute-btn"),
-      channelBtn: document.createElement("channel-btn"),
-      input: document.createElement("input"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      container = document.createElement("div"),
-      btnContainer = document.createElement("div"),
-      inputContainer = document.createElement("div"),
-      inputLeftContainer = document.createElement("div"),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let container, btnContainer, inputContainer, inputLeftContainer, style
+    ;[
+      this.volumeMeter,
+      this.volumeRange,
+      this.panKnob,
+      this.muteBtn,
+      this.channelBtn,
+      this.input,
+      container,
+      btnContainer,
+      inputContainer,
+      inputLeftContainer,
+      style,
+    ] = [
+      "volume-meter",
+      "volume-range",
+      "pan-knob",
+      "mute-btn",
+      "channel-btn",
+      "input",
+      ...Array(4).fill("div"),
+      "style",
+    ].map(tag => document.createElement(tag))
 
     style.textContent = this.style()
 
     // onchangeh
     ;[
-      [this.e.volumeRange, this.changeGain],
-      [this.e.panKnob, this.changePan],
+      [this.volumeRange, this.changeGain],
+      [this.panKnob, this.changePan],
     ].forEach(([e, func]) => (e.onchange = func))
 
     // setAttribute
     ;[
-      [this.e.input, [["type", "text"]]],
+      [this.input, [["type", "text"]]],
       [
-        this.e.panKnob,
+        this.panKnob,
         [
           ["label", "pan"],
           ["max", 100],
@@ -49,17 +59,17 @@ export default class HorizontalTrack extends HTMLElement {
     // add classList
     ;[
       [container, "container"],
-      [this.e.input, "label"],
+      [this.input, "label"],
       [btnContainer, "btn_container"],
       [inputContainer, "input_container"],
     ].forEach(([e, name]) => e.classList.add(name))
 
     // appendChild
     ;[
-      [btnContainer, [this.e.muteBtn, this.e.channelBtn]],
-      [inputLeftContainer, [this.e.input, this.e.volumeRange, btnContainer]],
-      [inputContainer, [inputLeftContainer, this.e.panKnob]],
-      [container, [inputContainer, this.e.volumeMeter]],
+      [btnContainer, [this.muteBtn, this.channelBtn]],
+      [inputLeftContainer, [this.input, this.volumeRange, btnContainer]],
+      [inputContainer, [inputLeftContainer, this.panKnob]],
+      [container, [inputContainer, this.volumeMeter]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
@@ -67,20 +77,20 @@ export default class HorizontalTrack extends HTMLElement {
   }
 
   connectedCallback() {
-    this.e.input.value = this.getAttribute("label")
-    this.e.muteBtn.gainValue = this.e.volumeRange.value / 100
+    this.input.value = this.getAttribute("label")
+    this.muteBtn.gainValue = this.volumeRange.value / 100
   }
 
-  changeGain = value => {
-    if (this.e.muteBtn.hasAttribute("active")) {
-      this.e.muteBtn.gainValue = value / 100
+  changeGain = val => {
+    if (this.muteBtn.hasAttribute("active")) {
+      this.muteBtn.gainValue = val / 100
     } else {
-      globalThis.audioClass.masterGain.gain.value = value / 100
+      globalThis.audioClass.masterGain.gain.value = val / 100
     }
   }
 
-  changePan = value => {
-    globalThis.audioClass.panner.pan.value = value / 100
+  changePan = val => {
+    globalThis.audioClass.panner.pan.value = val / 100
   }
 
   style = () => `

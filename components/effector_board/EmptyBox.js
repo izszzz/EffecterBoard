@@ -6,42 +6,51 @@ export default class EmptyBox extends HTMLElement {
       "delay-effector",
       "compressor-effector",
     ]
-    this.e = {
-      box: document.createElement("div"),
-      effector_board: document.querySelector("effector-board"),
-      modal: document.querySelector("basic-modal"),
-      modal_title: document.createElement("p"),
-      modal_content: document.createElement("ul"),
-      modal_style: document.createElement("style"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let style
+    ;[this.modal, this.effector_board] = [
+      "basic-modal",
+      "effector-board",
+    ].map(tag => document.querySelector(tag))
+    ;[
+      this.box,
+      this.modal_title,
+      this.modal_content,
+      this.modal_style,
+      style,
+    ] = ["div", "p", "ul", ...Array(2).fill("style")].map(tag =>
+      document.createElement(tag)
+    )
 
-    this.e.modal_style.textContent = this.modal_style()
-    this.e.modal_style.setAttribute("slot", "style")
+    this.modal_style.textContent = this.modalAddStyle()
+    this.modal_style.setAttribute("slot", "style")
 
     style.textContent = this.style()
 
-    this.e.box.classList.add("box")
-    this.e.box.addEventListener("click", this.openModal)
-    ;[this.e.box, style].forEach(e => shadow.appendChild(e))
+    this.box.classList.add("box")
+    this.box.addEventListener("click", this.openModal)
+    ;[this.box, style].forEach(e => shadow.appendChild(e))
     this.EmptyBoxModal()
   }
 
   openModal = () => {
-    this.e.modal.setAttribute("active", "")
-    ;[this.e.modal_title, this.e.modal_content, this.e.modal_style].forEach(e =>
-      this.e.modal.appendChild(e)
+    this.modal.setAttribute("active", "")
+    ;[this.modal_title, this.modal_content, this.modal_style].forEach(e =>
+      this.modal.appendChild(e)
     )
   }
 
   EmptyBoxModal = () => {
-    const eb = this.e.effector_board,
-      title = this.e.modal_title,
-      content = this.e.modal_content
+    const [eb, title, content] = [
+      this.effector_board,
+      this.modal_title,
+      this.modal_content,
+    ]
     title.innerText = "Select Effector"
-    title.setAttribute("slot", "title")
-    content.setAttribute("slot", "content")
+    ;[
+      [title, "title"],
+      [content, "content"],
+    ].forEach(([e, val]) => e.setAttribute("slot", val))
     this.effectors.forEach(effector => {
       const li = document.createElement("li")
       li.innerText = effector
@@ -97,7 +106,7 @@ export default class EmptyBox extends HTMLElement {
     background: #d1d1d1;
   }
   `
-  modal_style = () => `
+  modalAddStyle = () => `
   ul,li{
     margin: 0;
     padding: 0;

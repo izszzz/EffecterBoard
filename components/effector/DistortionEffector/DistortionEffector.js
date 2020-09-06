@@ -5,21 +5,20 @@ export default class DistortionEffector extends HTMLElement {
     this._output = null
     this._gain = null
     this._wave = null
-    this.e = {
-      gainKnob: document.createElement("distortion-knob"),
-      waveKnob: document.createElement("distortion-knob"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      container = document.createElement("div"),
-      knob_container = document.createElement("div"),
-      img = document.createElement("img"),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let container, knob_container, img, style
+    ;[this.gainKnob, this.waveKnob, container, knob_container, img, style] = [
+      ...Array(2).fill("distortion-knob"),
+      ...Array(2).fill("div"),
+      "img",
+      "style",
+    ].map(tag => document.createElement(tag))
 
     //setAttribute
     style.textContent = this.style()
     ;[
       [
-        this.e.gainKnob,
+        this.gainKnob,
         [
           ["label", "gain"],
           ["min", 0],
@@ -28,7 +27,7 @@ export default class DistortionEffector extends HTMLElement {
         ],
       ],
       [
-        this.e.waveKnob,
+        this.waveKnob,
         [
           ["label", "dist"],
           ["min", 0],
@@ -46,6 +45,11 @@ export default class DistortionEffector extends HTMLElement {
     ].forEach(([e, classes]) =>
       classes.forEach(([key, val]) => e.setAttribute(key, val))
     )
+    // addEventListener
+    ;[
+      [this.gainKnob, this.changeGain],
+      [this.waveKnob, this.changeWave],
+    ].forEach(([e, func]) => (e.onchange = func))
 
     // add class
     ;[
@@ -55,7 +59,7 @@ export default class DistortionEffector extends HTMLElement {
 
     // appendChild
     ;[
-      [knob_container, [this.e.gainKnob, this.e.waveKnob]],
+      [knob_container, [this.gainKnob, this.waveKnob]],
       [container, [knob_container, img]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
@@ -84,8 +88,11 @@ export default class DistortionEffector extends HTMLElement {
     this._output = val
   }
 
-  connectedCallback() {
-    this.setAttribute("active", "")
+  load = () => {
+    ;[
+      ["slot", "effector"],
+      ["active", ""],
+    ].forEach(([key, val]) => this.setAttribute(key, val))
     this.createNodes()
     this.connectNodes()
   }
@@ -96,7 +103,7 @@ export default class DistortionEffector extends HTMLElement {
   }
 
   connectNodes() {
-    this.gain.gain.value = this.e.gainKnob.value / 100
+    this.gain.gain.value = this.gainKnob.value / 100
     this.output = this.wave.connect(this.gain)
   }
 
@@ -117,7 +124,7 @@ export default class DistortionEffector extends HTMLElement {
     var k = typeof amount === "number" ? amount : 400,
       n_samples = 44100,
       curve = new Float32Array(n_samples),
-      deg = Math.PI / 180,
+      // deg = Math.PI / 180,
       i = 0,
       x
     for (; i < n_samples; ++i) {

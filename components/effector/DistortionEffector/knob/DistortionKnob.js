@@ -11,43 +11,43 @@ export default class DistortionKnob extends HTMLElement {
     this.max = 0
     this.min = 0
     this.onchange = null
-    this.e = {
-      label: document.createElement("p"),
-      knob: document.createElement("div"),
-      input: document.createElement("input"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      container = document.createElement("div"),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let container,
+      style
+      // createElement
+    ;[this.label, this.input, this.knob, container, style] = [
+      "p",
+      "input",
+      ...Array(2).fill("div"),
+      "style",
+    ].map(tag => document.createElement(tag))
     style.textContent = this.style()
-
-    this.e.input.setAttribute("type", "number")
-
+    this.input.setAttribute("type", "number")
     //addEventListener
     ;[
-      [this.e.input, "change", this.changeInput],
-      [this.e.knob, "mousedown", this.mouseDown],
+      [this.input, "change", this.changeInput],
+      [this.knob, "mousedown", this.mouseDown],
       [document.body, "mousemove", this.mouseMove],
       [document.body, "mouseup", this.mouseUp],
     ].forEach(([e, action, func]) => e.addEventListener(action, func))
 
     //add class
     ;[
-      [this.e.label, "label"],
-      [this.e.knob, "knob"],
+      [this.label, "label"],
+      [this.knob, "knob"],
       [container, "container"],
     ].forEach(([e, name]) => e.classList.add(name))
 
     //appendChild
     ;[
-      [container, [this.e.label, this.e.knob, this.e.input]],
+      [container, [this.label, this.knob, this.input]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
     )
   }
   connectedCallback() {
-    this.e.label.innerText = this.getAttribute("label")
+    this.label.innerText = this.getAttribute("label")
     ;[this.max, this.min, this.value] = ["max", "min", "value"].map(
       key => +this.getAttribute(key) || 0
     )
@@ -55,7 +55,7 @@ export default class DistortionKnob extends HTMLElement {
       ["max", this.max],
       ["min", this.min],
       ["value", this.value],
-    ].forEach(([key, name]) => this.e.input.setAttribute(key, name))
+    ].forEach(([key, name]) => this.input.setAttribute(key, name))
     this.angle = Math.floor((this.value / this.max) * 260 - 130)
     this.rotateKnob(this.angle)
   }
@@ -68,15 +68,15 @@ export default class DistortionKnob extends HTMLElement {
   changeKnob(deg) {
     this.rotateKnob(deg)
     this.value = Math.floor(this.max * ((deg + 130) / 260))
-    this.e.input.value = this.value
+    this.input.value = this.value
     this.onchange && this.onchange(this.value)
   }
 
   rotateKnob(deg) {
-    this.e.knob.style.transform = `rotate(${deg}deg)`
+    this.knob.style.transform = `rotate(${deg}deg)`
   }
   mouseUp = () => {
-    this.angle = Number(this.e.knob.style.transform.replace(/[^0-9\-]/g, ""))
+    this.angle = Number(this.knob.style.transform.replace(/[^0-9\-]/g, ""))
     this.downX = null
     this.downY = null
   }
@@ -106,7 +106,7 @@ export default class DistortionKnob extends HTMLElement {
     }
   }
   disconnectedCallbak() {
-    this.e.knob.removeEventListener("mouseup", this.mouseUp)
+    this.knob.removeEventListener("mouseup", this.mouseUp)
     document.body.removeEventListener("mousemove", this.mouseMove)
     document.body.removeEventListener("mousedown", this.mouseDown)
   }

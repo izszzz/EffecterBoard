@@ -4,12 +4,15 @@ export default class AudioSelect extends HTMLElement {
   }
   constructor() {
     super()
-    this.e = { select: document.createElement("select") }
-    const shadow = this.attachShadow({ mode: "open" }),
-      style = document.createElement("style")
+
+    const shadow = this.attachShadow({ mode: "open" })
+    let style
+    ;[this.select, style] = ["select", "style"].map(tag =>
+      document.createElement(tag)
+    )
     style.textContent = this.style()
-    this.e.select.addEventListener("change", this.selectAudio)
-    ;[this.e.select, style].forEach(e => shadow.appendChild(e))
+    this.select.addEventListener("change", this.selectAudio)
+    ;[this.select, style].forEach(e => shadow.appendChild(e))
   }
 
   attributeChangedCallback(name) {
@@ -31,14 +34,14 @@ export default class AudioSelect extends HTMLElement {
     })
 
   createOptionTag(devices) {
-    this.e.select.textContent = ""
+    this.select.textContent = ""
     ;[...devices].forEach(device => {
       const option = document.createElement("option")
       globalThis.audioClass.stream.getAudioTracks()[0].label === device.label &&
         option.setAttribute("selected", "")
       option.setAttribute("value", device.deviceId)
       option.innerText = device.label
-      this.e.select.appendChild(option)
+      this.select.appendChild(option)
     })
   }
 

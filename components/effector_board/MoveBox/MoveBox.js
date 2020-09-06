@@ -4,38 +4,39 @@ export default class MoveBox extends HTMLElement {
   constructor() {
     super()
     this._effector = null
-    this.e = {
-      effectorBoard: document.querySelector("effector-board"),
-      close_btn: document.createElement("span"),
-      lamp: document.createElement("basic-lamp"),
-      toggle_switch: document.createElement("toggle-switch"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      container = document.createElement("div"),
-      slot = document.createElement("slot"),
-      style = document.createElement("style")
+    this.effectorBoard = document.querySelector("effector-board")
+    const shadow = this.attachShadow({ mode: "open" })
+    let container, slot, style
+    ;[this.close_btn, this.lamp, this.toggle_switch, container, slot, style] = [
+      "span",
+      "basic-lamp",
+      "toggle-switch",
+      "div",
+      "slot",
+      "style",
+    ].map(tag => document.createElement(tag))
 
     style.textContent = this.style()
-    this.e.close_btn.innerText = "×"
+    this.close_btn.innerText = "×"
     // add class
     ;[
       [container, "container"],
-      [this.e.close_btn, "close-btn"],
+      [this.close_btn, "close-btn"],
     ].forEach(([e, name]) => e.classList.add(name))
     // setAttribute
     ;[
       [slot, "name", "effector"],
-      [this.e.lamp, "active", ""],
-      [this.e.toggle_switch, "active", ""],
+      [this.lamp, "active", ""],
+      [this.toggle_switch, "active", ""],
     ].forEach(([e, key, value]) => e.setAttribute(key, value))
     // addEventListener
     ;[
-      [this.e.close_btn, "click", this.delete],
-      [this.e.toggle_switch, "click", this.power],
+      [this.close_btn, "click", this.delete],
+      [this.toggle_switch, "click", this.power],
     ].forEach(([e, action, func]) => e.addEventListener(action, func))
     // appendChild
     ;[
-      [container, [this.e.close_btn, this.e.lamp, this.e.toggle_switch, slot]],
+      [container, [this.close_btn, this.lamp, this.toggle_switch, slot]],
       [shadow, [container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
@@ -53,11 +54,11 @@ export default class MoveBox extends HTMLElement {
   }
 
   disconnectedCallbak() {
-    this.e.close_btn.removeEventListener("click", this.delete)
+    this.close_btn.removeEventListener("click", this.delete)
   }
 
   power = () => {
-    let elements = [this, this.e.lamp, this.e.toggle_switch]
+    let elements = [this, this.lamp, this.toggle_switch]
     if (this.hasAttribute("active")) {
       elements.forEach(e => e.removeAttribute("active"))
       this.effector.disconnectNodes()
@@ -69,7 +70,7 @@ export default class MoveBox extends HTMLElement {
 
   delete = e => {
     this.effector.disconnectNodes()
-    this.e.effectorBoard.removeEffector(this.effector)
+    this.effectorBoard.removeEffector(this.effector)
     e.stopPropagation()
     this.remove()
   }

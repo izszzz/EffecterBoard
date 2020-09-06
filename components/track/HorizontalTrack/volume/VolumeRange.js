@@ -6,40 +6,42 @@ export default class VolumeRange extends HTMLElement {
     super()
     this._value = null
     this.onchange = null
-    this.e = {
-      container: document.createElement("div"),
-      range: document.createElement("input"),
-      input: document.createElement("input"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let style
+    ;[this.container, this.range, this.input, style] = [
+      "div",
+      ...Array(2).fill("input"),
+      "style",
+    ].map(tag => document.createElement(tag))
     style.textContent = this._style()
-    this.e.container.classList.add("container")
-    this.e.range.setAttribute("type", "range")
-    this.e.range.addEventListener("input", this._changeRangeValue)
-    this.e.input.setAttribute("type", "number")
-    this.e.input.addEventListener("input", this._changeInputValue)
-    ;[this.e.input, this.e.range].forEach(e => this.e.container.appendChild(e))
-    ;[this.e.container, style].forEach(e => shadow.appendChild(e))
+    ;[
+      [this.range, "range", this._changeRangeValue],
+      [this.input, "number", this._changeInputValue],
+    ].forEach(([e, val, func]) => {
+      e.setAttribute("type", val)
+      e.addEventListener("input", func)
+    })
+    this.container.classList.add("container")
+    ;[this.input, this.range].forEach(e => this.container.appendChild(e))
+    ;[this.container, style].forEach(e => shadow.appendChild(e))
   }
 
   attributeChangedCallback(name) {
     if (name === "value") this.onchange && this.onchange(+this.value)
   }
+
   connectedCallback() {
-    const [max, min, value] = [
-      this.getAttribute("max") || 150,
-      this.getAttribute("min") || 0,
-      this.getAttribute("value") || 100,
-    ]
-    ;[this.e.input, this.e.range].forEach(e =>
+    const [max = 150, min = 0, value = 100] = ["max", "min", "value"].map(key =>
+      this.getAttribute(key)
+    )
+    ;[this.input, this.range].forEach(e =>
       [
         ["max", max],
         ["min", min],
         ["value", value],
       ].forEach(([key, value]) => e.setAttribute(key, value))
     )
-    this.value = this.getAttribute("value") || 100
+    this.value = value
   }
 
   get value() {
@@ -51,13 +53,13 @@ export default class VolumeRange extends HTMLElement {
 
   _changeInputValue = e => {
     const value = e.currentTarget.value
-    this.e.range.value = value
+    this.range.value = value
     this.value = value
     this.setAttribute("value", value)
   }
   _changeRangeValue = e => {
     const value = e.currentTarget.value
-    this.e.input.value = value
+    this.input.value = value
     this.value = value
     this.setAttribute("value", value)
   }

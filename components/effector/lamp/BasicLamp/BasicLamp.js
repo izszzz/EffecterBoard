@@ -4,18 +4,22 @@ export default class BasicLamp extends HTMLElement {
   }
   constructor() {
     super()
-    this.e = {
-      bulb: document.createElement("div"),
-    }
-    const shadow = this.attachShadow({ mode: "open" }),
-      light = document.createElement("div"),
-      style = document.createElement("style")
+    const shadow = this.attachShadow({ mode: "open" })
+    let light, style
+    ;[this.bulb, light, style] = [...Array(2).fill("div"), "style"].map(tag =>
+      document.createElement(tag)
+    )
+    ;[
+      [this.bulb, "bulb"],
+      [light, "light"],
+    ].map(([e, val]) => e.classList.add(val))
     style.textContent = this.style()
-    this.e.bulb.classList.add("bulb")
-    light.classList.add("light")
-    this.e.bulb.appendChild(light)
-    shadow.appendChild(this.e.bulb)
-    shadow.appendChild(style)
+    ;[
+      [this.bulb, [light]],
+      [shadow, [this.bulb, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
+    )
   }
   observedAttributes(name) {
     if (name === "active") this.e.bulb.toggleAttribute("active")

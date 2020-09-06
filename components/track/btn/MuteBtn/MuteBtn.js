@@ -2,9 +2,7 @@ export default class MuteBtn extends HTMLElement {
   constructor() {
     super()
     this._gainValue = null
-    this.e = {
-      volume_range: document.querySelector("volume-range"),
-    }
+    this.volume_range = document.querySelector("volume-range")
     const shadow = this.attachShadow({ mode: "open" }),
       style = document.createElement("style")
     style.textContent = this.style()

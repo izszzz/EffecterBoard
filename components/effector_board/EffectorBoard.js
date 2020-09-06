@@ -4,20 +4,23 @@ import "./MoveBox/MoveBox.js"
 export default class EffectorBoard extends HTMLElement {
   constructor() {
     super()
-    const shadow = this.attachShadow({ mode: "open" }),
-      style = document.createElement("style")
-    this._effectors = []
+    const shadow = this.attachShadow({ mode: "open" })
+    let style
+    this.input = globalThis.audioClass.masterGain
     this._output = null
-    this.e = {
-      container: document.createElement("div"),
-      emptybox: document.createElement("empty-box"),
-    }
+    this._effectors = []
+    // createElement
+    ;[this.container, this.emptybox, style] = [
+      "div",
+      "empty-box",
+      "style",
+    ].map(tag => document.createElement(tag))
     style.textContent = this.style()
-    this.e.container.classList.add("container")
+    this.container.classList.add("container")
     //appendChild
     ;[
-      [this.e.container, [this.e.emptybox]],
-      [shadow, [this.e.container, style]],
+      [this.container, [this.emptybox]],
+      [shadow, [this.container, style]],
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
     )
@@ -48,15 +51,15 @@ export default class EffectorBoard extends HTMLElement {
   }
 
   createEffector(effector) {
-    this.input = globalThis.audioClass.masterGain
-    const mb = document.createElement("move-box"),
-      ef = document.createElement(effector)
-    ef.setAttribute("slot", "effector")
+    const [mb, ef] = ["move-box", effector].map(tag =>
+      document.createElement(tag)
+    )
     mb.appendChild(ef)
     mb.effector = ef
+    ef.load()
     this.disconnectEffectors()
     this.effectors = [...this.effectors, ef]
-    this.e.container.insertBefore(mb, this.e.emptybox)
+    this.container.insertBefore(mb, this.emptybox)
     this.connectEffectors()
     globalThis.audioClass.output()
   }
@@ -74,13 +77,14 @@ export default class EffectorBoard extends HTMLElement {
     globalThis.audioClass.effectorBoardOutput = [
       this.input,
       ...this.effectors.map(effector => effector.output),
-    ].reduce((a, b) => a && a.connect(b))
+    ].reduce((a, b) => a.connect(b))
   }
 
   disconnectEffectors() {
-    ;[this.input, ...this.effectors.map(effector => effector.output)].reduce(
-      (a, b) => a && a.disconnect(b)
-    )
+    ;[
+      this.input,
+      ...this.effectors.map(effector => effector.output),
+    ].reduce((a, b) => a.disconnect(b))
   }
 
   style = () => `
