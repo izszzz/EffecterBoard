@@ -2,7 +2,6 @@ export default class MuteBtn extends HTMLElement {
   constructor() {
     super()
     this._gainValue = null
-    this.volume_range = document.querySelector("volume-range")
     const shadow = this.attachShadow({ mode: "open" }),
       style = document.createElement("style")
     style.textContent = this.style()
@@ -19,11 +18,7 @@ export default class MuteBtn extends HTMLElement {
 
   onClick = () => {
     this.toggleAttribute("active")
-    if (this.hasAttribute("active")) {
-      globalThis.audioClass.masterGain.gain.value = 0
-    } else {
-      globalThis.audioClass.masterGain.gain.value = this.gainValue
-    }
+    globalThis.audioClass.masterGain.gain.value=this.hasAttribute("active") ? 0 : this.gainValue
   }
 
   style = () => `

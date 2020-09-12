@@ -57,8 +57,7 @@ export default class DistortionKnob extends HTMLElement {
       this.e.knob.style.transform.replace(/[^0-9\-]/g, "")
     )
     this.value = replaced
-    this.downX = null
-    this.downY = null
+    this.downX = this.downY = null
   }
   mouseDown = e => {
     this.downX = e.pageX
@@ -84,7 +83,7 @@ export default class DistortionKnob extends HTMLElement {
       this.rotateKnob(this.distance)
     }
   }
-  disconnectedCallbak() {
+  disconnectedCallback() {
     this.e.knob.removeEventListener("mouseup", this.mouseUp)
     document.body.removeEventListener("mousemove", this.mouseMove)
     document.body.removeEventListener("mousedown", this.mouseDown)

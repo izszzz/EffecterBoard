@@ -4,8 +4,7 @@ export default class VolumeRange extends HTMLElement {
   }
   constructor() {
     super()
-    this._value = null
-    this.onchange = null
+    this._value = this.onchange = null
     const shadow = this.attachShadow({ mode: "open" })
     let style
     ;[this.container, this.range, this.input, style] = [
@@ -13,7 +12,6 @@ export default class VolumeRange extends HTMLElement {
       ...Array(2).fill("input"),
       "style",
     ].map(tag => document.createElement(tag))
-    style.textContent = this._style()
     ;[
       [this.range, "range", this._changeRangeValue],
       [this.input, "number", this._changeInputValue],
@@ -22,8 +20,13 @@ export default class VolumeRange extends HTMLElement {
       e.addEventListener("input", func)
     })
     this.container.classList.add("container")
-    ;[this.input, this.range].forEach(e => this.container.appendChild(e))
-    ;[this.container, style].forEach(e => shadow.appendChild(e))
+    ;[
+      [this.container, [this.input, this.range]],
+      [shadow, [this.container, style]],
+    ].forEach(([parent, children]) =>
+      children.forEach(child => parent.appendChild(child))
+    )
+    style.textContent = this.style()
   }
 
   attributeChangedCallback(name) {
@@ -31,8 +34,8 @@ export default class VolumeRange extends HTMLElement {
   }
 
   connectedCallback() {
-    const [max = 150, min = 0, value = 100] = ["max", "min", "value"].map(key =>
-      this.getAttribute(key)
+    const [max = 150, min = 0, value = 100] = ["max", "min", "value"].map(
+      key => this.getAttribute(key) || undefined
     )
     ;[this.input, this.range].forEach(e =>
       [
@@ -52,19 +55,19 @@ export default class VolumeRange extends HTMLElement {
   }
 
   _changeInputValue = e => {
-    const value = e.currentTarget.value
-    this.range.value = value
-    this.value = value
-    this.setAttribute("value", value)
+    this.range.value = this._changeValue(e)
   }
   _changeRangeValue = e => {
+    this.input.value = this._changeValue(e)
+  }
+  _changeValue = e => {
     const value = e.currentTarget.value
-    this.input.value = value
     this.value = value
     this.setAttribute("value", value)
+    return value
   }
 
-  _style = () => `
+  style = () => `
   :host{
     display: block;
   }

@@ -2,6 +2,7 @@ import "./knob/DistortionKnob.js"
 export default class DistortionEffector extends HTMLElement {
   constructor() {
     super()
+    this._input= null
     this._output = null
     this._gain = null
     this._wave = null
@@ -81,6 +82,13 @@ export default class DistortionEffector extends HTMLElement {
     this._wave = val
   }
 
+  get input() {
+    return this._input
+  }
+  set input(val) {
+    this._input = val
+  }
+
   get output() {
     return this._output
   }
@@ -88,7 +96,7 @@ export default class DistortionEffector extends HTMLElement {
     this._output = val
   }
 
-  load = () => {
+  connectedCallback (){
     ;[
       ["slot", "effector"],
       ["active", ""],
@@ -99,16 +107,16 @@ export default class DistortionEffector extends HTMLElement {
 
   createNodes() {
     this.wave = globalThis.audioClass.ctx.createWaveShaper()
-    this.gain = globalThis.audioClass.ctx.createGain()
+    this.input = this.gain = globalThis.audioClass.ctx.createGain()
   }
 
   connectNodes() {
     this.gain.gain.value = this.gainKnob.value / 100
-    this.output = this.wave.connect(this.gain)
+    this.output = this.gain.connect(this.wave)
   }
 
   disconnectNodes() {
-    this.wave.disconnect(this.gain)
+    this.gain.disconnect(this.wave)
     this.gain.gain.value = 0
     this.output = this.gain
   }
@@ -124,15 +132,15 @@ export default class DistortionEffector extends HTMLElement {
     var k = typeof amount === "number" ? amount : 400,
       n_samples = 44100,
       curve = new Float32Array(n_samples),
-      // deg = Math.PI / 180,
+      deg = Math.PI / 180,
       i = 0,
       x
     for (; i < n_samples; ++i) {
       x = (i * 2) / n_samples - 1
-      curve[i] =
-        ((3 + k) * Math.atan(Math.sinh(x * 0.25) * 5)) /
-        (Math.PI + k * Math.abs(x))
-      // curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x))
+      //curve[i] =
+        //((3 + k) * Math.atan(Math.sinh(x * 0.25) * 5)) /
+        //(Math.PI + k * Math.abs(x))
+      curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x))
     }
     return curve
   }

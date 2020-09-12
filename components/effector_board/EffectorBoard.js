@@ -6,7 +6,7 @@ export default class EffectorBoard extends HTMLElement {
     super()
     const shadow = this.attachShadow({ mode: "open" })
     let style
-    this.input = globalThis.audioClass.masterGain
+    this._input = globalThis.audioClass.masterGain
     this._output = null
     this._effectors = []
     // createElement
@@ -15,8 +15,6 @@ export default class EffectorBoard extends HTMLElement {
       "empty-box",
       "style",
     ].map(tag => document.createElement(tag))
-    style.textContent = this.style()
-    this.container.classList.add("container")
     //appendChild
     ;[
       [this.container, [this.emptybox]],
@@ -24,6 +22,8 @@ export default class EffectorBoard extends HTMLElement {
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
     )
+    style.textContent = this.style()
+    this.container.classList.add("container")
   }
 
   get input() {
@@ -56,7 +56,6 @@ export default class EffectorBoard extends HTMLElement {
     )
     mb.appendChild(ef)
     mb.effector = ef
-    ef.load()
     this.disconnectEffectors()
     this.effectors = [...this.effectors, ef]
     this.container.insertBefore(mb, this.emptybox)
@@ -64,27 +63,41 @@ export default class EffectorBoard extends HTMLElement {
     globalThis.audioClass.output()
   }
 
-  removeEffector(setedEffecter) {
+  removeEffector(settedEffecter) {
     this.disconnectEffectors()
     this.effectors = this.effectors.filter(
-      effector => effector !== setedEffecter
+      effector => effector !== settedEffecter
     )
     this.connectEffectors()
     globalThis.audioClass.output()
   }
 
   connectEffectors() {
-    globalThis.audioClass.effectorBoardOutput = [
-      this.input,
-      ...this.effectors.map(effector => effector.output),
-    ].reduce((a, b) => a.connect(b))
+    if(this.effectors.length > 0 ) {
+      this.input.connect(this.effectors[0].input)
+      if(this.effectors.length === 1) {
+        globalThis.audioClass.effectorBoardOutput = this.effectors[0].output
+      } else {
+        for(let i=0; i<this.effectors.length-1; i++){
+          this.effectors[i].output.connect(this.effectors[i+1].input)
+        }
+        globalThis.audioClass.effectorBoardOutput = this.effectors[this.effectors.length-1].output
+      }
+    }
   }
 
   disconnectEffectors() {
-    ;[
-      this.input,
-      ...this.effectors.map(effector => effector.output),
-    ].reduce((a, b) => a.disconnect(b))
+    if(this.effectors.length > 0 ) {
+      this.input.disconnect(this.effectors[0].input)
+      if(this.effectors.length === 1) {
+        globalThis.audioClass.effectorBoardOutput = this.effectors[0].output
+      } else {
+        for(let i=0; i<this.effectors.length-1; i++){
+          this.effectors[i].output.disconnect(this.effectors[i+1].input)
+        }
+        globalThis.audioClass.effectorBoardOutput = null 
+      }
+    }
   }
 
   style = () => `

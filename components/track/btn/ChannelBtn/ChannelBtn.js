@@ -4,14 +4,12 @@ export default class ChannelBtn extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" })
     let div, style
     ;[div, style] = ["div", "style"].map(tag => document.createElement(tag))
+    ;[div, style].forEach(e => shadow.appendChild(e))
     style.textContent = this.style()
     this.addEventListener("click", this.onClick)
-    ;[div, style].forEach(e => shadow.appendChild(e))
   }
 
-  onClick = () => {
-    this.toggleAttribute("active")
-  }
+  onClick = () => this.toggleAttribute("active")
 
   style = () => `
     :host{

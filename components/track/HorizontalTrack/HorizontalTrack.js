@@ -89,9 +89,9 @@ export default class HorizontalTrack extends HTMLElement {
     }
   }
 
-  changePan = val => {
+  changePan = val => 
     globalThis.audioClass.panner.pan.value = val / 100
-  }
+  
 
   style = () => `
     .container{

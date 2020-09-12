@@ -10,9 +10,9 @@ export default class AudioSelect extends HTMLElement {
     ;[this.select, style] = ["select", "style"].map(tag =>
       document.createElement(tag)
     )
+    ;[this.select, style].forEach(e => shadow.appendChild(e))
     style.textContent = this.style()
     this.select.addEventListener("change", this.selectAudio)
-    ;[this.select, style].forEach(e => shadow.appendChild(e))
   }
 
   attributeChangedCallback(name) {

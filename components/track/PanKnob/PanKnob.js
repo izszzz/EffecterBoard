@@ -1,15 +1,8 @@
 export default class PanKnob extends HTMLElement {
   constructor() {
     super()
-    this.downX = null
-    this.downY = null
-    this.upX = null
-    this.upY = null
-    this.distance = 0
-    this.value = 0
-    this.angle = 0
-    this.max = 0
-    this.min = 0
+    this.downX = this.downY = this.upX = this.upY = null
+    this.distance = this.value = this.angle = this.max = this.min = 0
     this.onchange = null
     const shadow = this.attachShadow({ mode: "open" })
     let container, style
@@ -104,7 +97,7 @@ export default class PanKnob extends HTMLElement {
       this.changeKnob(this.distance)
     }
   }
-  disconnectedCallbak() {
+  disconnectedCallback() {
     ;[
       [this.knob, "mouseup", this.mouseUp],
       [document.body, "mousemove", this.mouseMove],

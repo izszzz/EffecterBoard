@@ -31,9 +31,9 @@ export default class MoveBox extends HTMLElement {
     ].forEach(([e, key, value]) => e.setAttribute(key, value))
     // addEventListener
     ;[
-      [this.close_btn, "click", this.delete],
-      [this.toggle_switch, "click", this.power],
-    ].forEach(([e, action, func]) => e.addEventListener(action, func))
+      [this.close_btn, this.delete],
+      [this.toggle_switch, this.power],
+    ].forEach(([e, func]) => e.addEventListener("click", func))
     // appendChild
     ;[
       [container, [this.close_btn, this.lamp, this.toggle_switch, slot]],
@@ -53,7 +53,7 @@ export default class MoveBox extends HTMLElement {
     this.setAttribute("active", "")
   }
 
-  disconnectedCallbak() {
+  disconnectedCallback() {
     this.close_btn.removeEventListener("click", this.delete)
   }
 
