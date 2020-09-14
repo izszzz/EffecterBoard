@@ -15,9 +15,6 @@ export default class MoveBox extends HTMLElement {
       "slot",
       "style",
     ].map(tag => document.createElement(tag))
-
-    style.textContent = this.style()
-    this.close_btn.innerText = "×"
     // add class
     ;[
       [container, "container"],
@@ -41,6 +38,8 @@ export default class MoveBox extends HTMLElement {
     ].forEach(([parent, children]) =>
       children.forEach(child => parent.appendChild(child))
     )
+    style.textContent = this.style()
+    this.close_btn.innerText = "×"
   }
 
   get effector() {

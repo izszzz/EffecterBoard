@@ -2,10 +2,7 @@ import "./knob/DistortionKnob.js"
 export default class DistortionEffector extends HTMLElement {
   constructor() {
     super()
-    this._input= null
-    this._output = null
-    this._gain = null
-    this._wave = null
+    this._input = this._output = this._gain = this._wave = null
     const shadow = this.attachShadow({ mode: "open" })
     let container, knob_container, img, style
     ;[this.gainKnob, this.waveKnob, container, knob_container, img, style] = [
@@ -23,8 +20,8 @@ export default class DistortionEffector extends HTMLElement {
         [
           ["label", "gain"],
           ["min", 0],
-          ["max", 300],
-          ["value", 100],
+          ["max", 100],
+          ["value", 0],
         ],
       ],
       [
@@ -96,7 +93,7 @@ export default class DistortionEffector extends HTMLElement {
     this._output = val
   }
 
-  connectedCallback (){
+  connectedCallback() {
     ;[
       ["slot", "effector"],
       ["active", ""],
@@ -138,8 +135,8 @@ export default class DistortionEffector extends HTMLElement {
     for (; i < n_samples; ++i) {
       x = (i * 2) / n_samples - 1
       //curve[i] =
-        //((3 + k) * Math.atan(Math.sinh(x * 0.25) * 5)) /
-        //(Math.PI + k * Math.abs(x))
+      //((3 + k) * Math.atan(Math.sinh(x * 0.25) * 5)) /
+      //(Math.PI + k * Math.abs(x))
       curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x))
     }
     return curve

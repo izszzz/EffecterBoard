@@ -23,16 +23,16 @@ class BasicModal extends HTMLElement {
     ].forEach(([e, val]) => e.classList.add(val))
     // addEventListener
     ;[
-      [this, "click", this.closeModal],
-      [window, "click", e => e.stopPropagation()],
-      [close_btn, "click", this.closeModal],
-    ].forEach(([e, action, func]) => e.addEventListener(action, func))
+      [this, this.closeModal],
+      [window, e => e.stopPropagation()],
+      [close_btn, this.closeModal],
+    ].forEach(([e, func]) => e.addEventListener("click", func))
     // setAttribute
     ;[
-      [content_slot, "name", "content"],
-      [title_slot, "name", "title"],
-      [style_slot, "name", "style"],
-    ].forEach(([e, attr, name]) => e.setAttribute(attr, name))
+      [content_slot, "content"],
+      [title_slot, "title"],
+      [style_slot, "style"],
+    ].forEach(([e, name]) => e.setAttribute("name", name))
     //appendChild
     ;[
       [header, [title_slot, close_btn]],

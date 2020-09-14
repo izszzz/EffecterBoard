@@ -1,16 +1,8 @@
 export default class DistortionKnob extends HTMLElement {
   constructor() {
     super()
-    this.downX = null
-    this.downY = null
-    this.upX = null
-    this.upY = null
-    this.distance = 0
-    this.value = 0
-    this.angle = 0
-    this.max = 0
-    this.min = 0
-    this.onchange = null
+    this.downX = this.downY = this.upX = this.upY = this.onchange = null
+    this.distance = this.value = this.angle = this.max = this.min = 0
     const shadow = this.attachShadow({ mode: "open" })
     let container,
       style
@@ -48,27 +40,29 @@ export default class DistortionKnob extends HTMLElement {
   }
   connectedCallback() {
     this.label.innerText = this.getAttribute("label")
-    ;[this.max, this.min, this.value] = ["max", "min", "value"].map(
-      key => +this.getAttribute(key) || 0
-    )
+    ;[this.max, this.min, this.value, this.label.innerText] = [
+      "max",
+      "min",
+      "value",
+      "label",
+    ].map(key => this.getAttribute(key) || 0)
     ;[
       ["max", this.max],
       ["min", this.min],
       ["value", this.value],
     ].forEach(([key, name]) => this.input.setAttribute(key, name))
-    this.angle = Math.floor((this.value / this.max) * 260 - 130)
+    this.angle = ~~((this.value / this.max) * 260 - 130)
+    this.rotateKnob(this.angle)
     this.onchange && this.onchange(this.value)
   }
   changeInput = e => {
     this.value = e.currentTarget.value
-    this.angle = Math.floor((this.value / this.max) * 260 - 130)
-    this.rotateKnob(this.angle)
+    this.angle = ~~((this.value / this.max) * 260 - 130)
     this.onchange && this.onchange(this.value)
   }
   changeKnob(deg) {
     this.rotateKnob(deg)
-    this.value = Math.floor(this.max * ((deg + 130) / 260))
-    this.input.value = this.value
+    this.input.value = this.value = ~~(this.max * ((deg + 130) / 260))
     this.onchange && this.onchange(this.value)
   }
 
@@ -76,9 +70,8 @@ export default class DistortionKnob extends HTMLElement {
     this.knob.style.transform = `rotate(${deg}deg)`
   }
   mouseUp = () => {
-    this.angle = Number(this.knob.style.transform.replace(/[^0-9\-]/g, ""))
-    this.downX = null
-    this.downY = null
+    this.angle = +this.knob.style.transform.replace(/[^0-9\-]/g, "")
+    this.downX = this.downY = null
   }
   mouseDown = e => {
     this.downX = e.pageX
@@ -89,28 +82,23 @@ export default class DistortionKnob extends HTMLElement {
     if (this.downX && this.downY) {
       this.moveX = e.pageX
       this.moveY = e.pageY
-      this.distance = Math.floor(
-        Math.sqrt(
-          Math.pow(this.moveX - this.downX, 2) +
-            Math.pow(this.moveY - this.downY, 2)
-        )
+      this.distance = ~~Math.sqrt(
+        (this.moveX - this.downX) ** 2 + (this.moveY - this.downY) ** 2
       )
       this.downX > this.moveX && (this.distance = -this.distance)
-      this.distance = this.distance + this.angle
-      if (this.distance > 130) {
-        this.distance = 130
-      } else if (this.distance < -130) {
-        this.distance = -130
-      }
+      this.distance += this.angle
+
+      this.distance > 130 && (this.distance = 130)
+      this.distance < -130 && (this.distance = -130)
       this.changeKnob(this.distance)
     }
   }
   disconnectedCallback() {
     ;[
-      [this.knob, "mouseup", this.mouseUp],
-      [document.body, "mousemove", this.mouseMove],
-      [document.body, "mousedown", this.mouseDown],
-    ].forEach(([e, action, func]) => e.removeEventListener(action, func))
+      [this.knob, "up", this.mouseUp],
+      [document.body, "move", this.mouseMove],
+      [document.body, "down", this.mouseDown],
+    ].forEach(([e, act, func]) => e.removeEventListener("mouse" + act, func))
   }
   style = () => `
     .container{
